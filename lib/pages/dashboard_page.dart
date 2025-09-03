@@ -13,3 +13,5 @@ class DashboardPage extends StatelessWidget {
     );
   }
 }
+
+//put the buttons to go to the other pages

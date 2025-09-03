@@ -14,10 +14,10 @@ class DrawerPage extends StatelessWidget {
       GlobalKey<ScaffoldState>(); // ✅ Scaffold key
 
   final List<Widget> pages = [
-    const DashboardPage(),
-    const HomePage(),
-    const HistoryPage(),
-    const ProfilePage(),
+   DashboardPage(),
+   HomePage(),
+   HistoryPage(),
+   ProfilePage(),
   ];
 
   @override
