@@ -1,7 +1,13 @@
 import 'package:get/get.dart';
+import 'package:group_inshallah/binding/drawer_binding.dart';
 import '../pages/login_page.dart';
 import '../pages/drawer_page.dart';
+import '../pages/home_page.dart';
+import '../pages/add_todo_page.dart';
+import '../pages/todo_edit_page.dart';
 import '../binding/login_binding.dart';
+import '../binding/home_binding.dart';
+import '../controllers/todo_edit_controller.dart';
 import 'routes.dart';
 
 class AppPages {
@@ -12,8 +18,25 @@ class AppPages {
       binding: LoginBinding(),
     ),
     GetPage(
+      
       name: AppRoutes.dashboard,
-      page: () => DrawerPage(), // 🔹 Wraps everything
+      page: () => DrawerPage(),
+      binding: DrawerBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.home,
+      page: () => HomePage(),
+      binding: DrawerBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.addTodo,
+      page: () => const AddTodoPage(),
+      binding: DrawerBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.editTodo,
+      page: () => const TodoEditPage(),
+      binding: DrawerBinding(),
     ),
   ];
 }

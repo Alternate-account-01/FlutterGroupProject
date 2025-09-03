@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Login Demo',
-      initialRoute: AppRoutes.login,
+      title: 'Todo App',
+      initialRoute: AppRoutes.login, // Start at login
       getPages: AppPages.pages,
     );
   }
