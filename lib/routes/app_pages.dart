@@ -8,6 +8,7 @@ import '../pages/todo_edit_page.dart';
 import '../binding/login_binding.dart';
 import '../binding/home_binding.dart';
 import '../controllers/todo_edit_controller.dart';
+import '../pages/history_page.dart';
 import 'routes.dart';
 
 class AppPages {
@@ -36,6 +37,11 @@ class AppPages {
     GetPage(
       name: AppRoutes.editTodo,
       page: () => const TodoEditPage(),
+      binding: DrawerBinding(),
+    ),
+    GetPage( 
+      name: AppRoutes.history,
+      page: () => HistoryPage(),
       binding: DrawerBinding(),
     ),
   ];
