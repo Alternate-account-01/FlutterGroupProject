@@ -1,0 +1,46 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "FlutterGroupProject",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "FlutterGroupProject (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "FlutterGroupProject (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "FlutterGroupProject",
+            "cwd": "FlutterGroupProject",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "FlutterGroupProject (profile mode)",
+            "cwd": "FlutterGroupProject",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "FlutterGroupProject (release mode)",
+            "cwd": "FlutterGroupProject",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
