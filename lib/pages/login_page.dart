@@ -5,61 +5,78 @@ import '../widgets/PrimaryButton.dart';
 import '../widgets/InputField.dart';
 
 class LoginPage extends StatelessWidget {
+  final LoginController loginController = Get.put(LoginController());
+
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final LoginController loginController = Get.find();
+
+  final RxBool _isPasswordVisible = false.obs;
+
+  LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.lock_outline, size: 100, color: Colors.white),
-                const SizedBox(height: 16),
-                const Text(
-                  "Welcome Back",
+      backgroundColor: Colors.white,
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.eco_outlined, color: Colors.green.shade600, size: 36),
+                  const SizedBox(width: 8),
+                  const Text(
+                    "Skibidi",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              const Center(
+                child: Text(
+                  "Work without limits",
                   style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    fontSize: 18,
+                    color: Colors.grey,
                   ),
                 ),
-                const SizedBox(height: 8),
-                const Text(
-                  "Please sign in to continue",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70,
+              ),
+              const SizedBox(height: 48),
+              InputField(
+                controller: usernameController,
+                hint: "Your email address",
+              ),
+              const SizedBox(height: 24),
+              Obx(() => InputField(
+                    controller: passwordController,
+                    hint: "Choose a password",
+                    obscureText: !_isPasswordVisible.value,
+                    isPassword: true,
+                    onVisibilityToggle: (isVisible) {
+                      _isPasswordVisible.value = isVisible;
+                    },
                   ),
-                ),
-                const SizedBox(height: 24),
-                InputField(controller: usernameController, hint: "Username", icon: Icons.person),
-                const SizedBox(height: 12),
-                InputField(controller: passwordController, hint: "Password", obscureText: true, icon: Icons.lock),
-                const SizedBox(height: 20),
-                PrimaryButton(
-                  text: "Login",
-                  onPressed: () {
-                    loginController.login(
-                      usernameController.text,
-                      passwordController.text,
-                    );
-                  },
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 32),
+              PrimaryButton(
+                text: "Continue",
+                onPressed: () {
+                  loginController.login(
+                    usernameController.text,
+                    passwordController.text,
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),

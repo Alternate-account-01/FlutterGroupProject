@@ -38,19 +38,16 @@ class AddTodoPage extends GetView<AddTodoController> {
             InputField(
               controller: controller.titleCtrl,
               hint: "Title",
-              icon: Icons.title_rounded,
             ),
             const SizedBox(height: 16),
             InputField(
               controller: controller.descCtrl,
               hint: "Description",
-              icon: Icons.description_outlined,
             ),
             const SizedBox(height: 16),
             InputField(
               controller: controller.categoryCtrl,
               hint: "Category",
-              icon: Icons.category_outlined,
             ),
             const SizedBox(height: 32),
 

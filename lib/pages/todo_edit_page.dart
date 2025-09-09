@@ -39,19 +39,16 @@ class TodoEditPage extends StatelessWidget {
             InputField(
               controller: controller.titleController,
               hint: "Title",
-              icon: Icons.title_rounded,
             ),
             const SizedBox(height: 16),
             InputField(
               controller: controller.descController,
               hint: "Description",
-              icon: Icons.description_outlined,
             ),
             const SizedBox(height: 16),
             InputField(
               controller: controller.categoryController,
               hint: "Category",
-              icon: Icons.category_outlined,
             ),
             const SizedBox(height: 32),
             PrimaryButton(
