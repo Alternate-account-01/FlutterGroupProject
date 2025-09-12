@@ -7,6 +7,7 @@ class AddTodoController extends GetxController {
   final titleCtrl = TextEditingController();
   final descCtrl = TextEditingController();
   final categoryCtrl = TextEditingController();
+  final dueDateCtrl = TextEditingController(); // ✅ new
 
   final HomeController homeController = Get.find<HomeController>();
 
@@ -16,6 +17,7 @@ class AddTodoController extends GetxController {
         title: titleCtrl.text,
         description: descCtrl.text,
         category: categoryCtrl.text,
+        dueDate: dueDateCtrl.text, // ✅ save it
       ));
       homeController.todos.refresh();
       Get.back();
@@ -29,6 +31,7 @@ class AddTodoController extends GetxController {
     titleCtrl.dispose();
     descCtrl.dispose();
     categoryCtrl.dispose();
+    dueDateCtrl.dispose(); // ✅ dispose
     super.onClose();
   }
 }
