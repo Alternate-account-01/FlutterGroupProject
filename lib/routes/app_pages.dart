@@ -31,12 +31,12 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.addTodo,
-      page: () => const AddTodoPage(),
+      page: () => AddTodoPage(),
       binding: DrawerBinding(),
     ),
     GetPage(
       name: AppRoutes.editTodo,
-      page: () => const TodoEditPage(),
+      page: () => TodoEditPage(),
       binding: DrawerBinding(),
     ),
     GetPage( 

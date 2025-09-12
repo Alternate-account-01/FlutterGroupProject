@@ -1,163 +1,222 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/add_todo_controller.dart';
 import '../controllers/home_controller.dart';
-import '../routes/routes.dart';
-import '../widgets/item_todo.dart';
+import '../controllers/todo_edit_controller.dart';
+import '../widgets/task_card.dart';
+import 'add_todo_page.dart';
+import 'todo_edit_page.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  final HomeController controller = Get.find<HomeController>();
+  final HomeController controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        title: const Text(
-          "Todo List",
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 1.0,
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.toNamed(AppRoutes.addTodo);
+          Get.lazyPut(() => AddTodoController());
+          Get.to(
+            () => AddTodoPage(),
+            fullscreenDialog: true,
+            opaque: false,
+            transition: Transition.fadeIn,
+          );
         },
-        backgroundColor: Colors.blue.shade700,
-        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: const Color(0xFF6756D6),
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, color: Colors.white, size: 30),
       ),
-      body: Obx(
-  () {
-    final pendingTodos = controller.pendingTodos;
-
-    if (pendingTodos.isEmpty) {
-      return Center(
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              Icons.checklist_rtl_rounded,
-              size: 80,
-              color: Colors.grey[300],
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              "No tasks yet!",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            const SizedBox(height: 24),
+            _buildStatsHeader(),
+            const SizedBox(height: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Today's Tasks",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Obx(
+                    () => Text(
+                      "${controller.pendingTodos.length} tasks",
+                      style: const TextStyle(color: Colors.grey, fontSize: 16),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              "Tap the '+' button to add a new task.",
-              style: TextStyle(color: Colors.grey[600]),
+            const SizedBox(height: 16),
+            Expanded(
+              child: Obx(() {
+                if (controller.pendingTodos.isEmpty) {
+                  return const Center(
+                    child: Text("No pending tasks!",
+                        style: TextStyle(fontSize: 18, color: Colors.grey)),
+                  );
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  itemCount: controller.pendingTodos.length,
+                  itemBuilder: (context, index) {
+                    final todoFromPendingList = controller.pendingTodos[index];
+                    final originalIndex = controller.todos.indexOf(todoFromPendingList);
+
+                    return TaskCard(
+                      todo: todoFromPendingList,
+                      onMarkDone: () => controller.markDone(originalIndex),
+                      onDelete: () => _showDeleteDialog(context, originalIndex),
+                      onEdit: () {
+                        final fullTodo = controller.todos[originalIndex];
+                        Get.to(
+                          () => const TodoEditPage(),
+                          arguments: {
+                            'todo': fullTodo,
+                            'index': originalIndex,
+                          },
+                          binding: BindingsBuilder(() {
+                            Get.lazyPut(() => TodoEditController());
+                          }),
+                        );
+                      },
+                    );
+                  },
+                );
+              }),
             ),
           ],
         ),
-      );
-    }
-
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      itemCount: pendingTodos.length,
-      itemBuilder: (context, index) {
-        final todo = pendingTodos[index];
-        final realIndex = controller.todos.indexOf(todo);
-
-        return ItemTodo(
-          todo: todo,
-          onToggleDone: () {
-            controller.markDone(realIndex); 
-          },
-          onEdit: () {
-            Get.toNamed(
-              AppRoutes.editTodo,
-              arguments: {'todo': todo, 'index': realIndex},
-            );
-          },
-          onDelete: () {
-            Get.dialog(
-              AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.delete_outline_rounded,
-                        color: Colors.red.shade400, size: 50),
-                    const SizedBox(height: 16),
-                    const Text(
-                      "Delete Task?",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "Are you sure you want to delete this task?",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.black54, fontSize: 14),
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () => Get.back(),
-                            style: OutlinedButton.styleFrom(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 12),
-                              side: BorderSide(color: Colors.grey.shade300),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: const Text(
-                              "Cancel",
-                              style: TextStyle(color: Colors.black87),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              controller.deleteTodo(realIndex);
-                              Get.back();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red.shade400,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 12),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: const Text(
-                              "Delete",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
+      ),
     );
-  },
-),
+  }
+
+  Widget _buildStatsHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Obx(
+        () => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildStatItem(
+                controller.todos.length.toString(), "Total Tasks", Colors.blue),
+            _buildStatItem(controller.completedTodos.length.toString(),
+                "Completed", Colors.green),
+            _buildStatItem(controller.pendingTodos.length.toString(), "Pending",
+                Colors.orange),
+            _buildStatItem(
+              controller.todos
+                  .where((t) => t.category == 'Pekerjaan' && !t.isDone)
+                  .length
+                  .toString(),
+              "Urgent",
+              Colors.red,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatItem(String count, String label, Color color) {
+    return Column(
+      children: [
+        Text(
+          count,
+          style: TextStyle(
+              fontSize: 24, fontWeight: FontWeight.bold, color: color),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.grey, fontSize: 14),
+        ),
+      ],
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, int index) {
+    Get.dialog(
+      AlertDialog(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.delete_forever_rounded,
+                color: Colors.red.shade400, size: 50),
+            const SizedBox(height: 16),
+            const Text("Delete Permanently?",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            const Text(
+              "This action cannot be undone.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.black54, fontSize: 14),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Get.back(),
+                    style: OutlinedButton.styleFrom(
+                      padding:
+                          const EdgeInsets.symmetric(vertical: 12),
+                      side: BorderSide(
+                          color: Colors.grey.shade300),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text("Cancel",
+                        style: TextStyle(
+                            color: Colors.black87)),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (index != -1) {
+                        controller.deleteTodo(index);
+                      }
+                      Get.back();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red.shade400,
+                      padding:
+                          const EdgeInsets.symmetric(vertical: 12),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text("Delete",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
