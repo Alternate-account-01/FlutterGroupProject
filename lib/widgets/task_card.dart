@@ -48,6 +48,7 @@ class TaskCard extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Left color bar
           Container(
             width: 4,
             height: 50,
@@ -58,6 +59,7 @@ class TaskCard extends StatelessWidget {
           ),
           const SizedBox(width: 12),
 
+          // Task content
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,33 +67,47 @@ class TaskCard extends StatelessWidget {
                 Text(
                   todo.title,
                   style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
                 const SizedBox(height: 4),
+
                 if (todo.description.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 12.0),
-                    child: Text(todo.description,
-                        style: const TextStyle(color: Colors.black54)),
+                    child: Text(
+                      todo.description,
+                      style: const TextStyle(color: Colors.black54),
+                    ),
                   ),
+
+                // Priority + Due Date
                 Row(
                   children: [
                     Icon(Icons.circle, color: priority['color'], size: 10),
                     const SizedBox(width: 4),
-                    Text(priority['level'],
-                        style: TextStyle(
-                            color: priority['color'],
-                            fontWeight: FontWeight.w500)),
+                    Text(
+                      priority['level'],
+                      style: TextStyle(
+                        color: priority['color'],
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     const Spacer(),
-                    const Text("2h ago", style: TextStyle(color: Colors.grey)),
+                    if (todo.dueDate != null && todo.dueDate!.isNotEmpty)
+                      Text(
+                        "Due: ${todo.dueDate}",
+                        style: const TextStyle(color: Colors.grey),
+                      ),
                   ],
-                )
+                ),
               ],
             ),
           ),
 
+          // Options menu
           PopupMenuButton<String>(
             icon: const Icon(Icons.more_horiz, color: Colors.grey),
             onSelected: (value) {

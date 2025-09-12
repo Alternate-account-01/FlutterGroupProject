@@ -1,13 +1,11 @@
 import 'package:get/get.dart';
 import 'package:group_inshallah/binding/drawer_binding.dart';
 import '../pages/login_page.dart';
-import '../pages/drawer_page.dart';
+import '../pages/register_page.dart'; // ✅ new
 import '../pages/home_page.dart';
 import '../pages/add_todo_page.dart';
 import '../pages/todo_edit_page.dart';
 import '../binding/login_binding.dart';
-import '../binding/home_binding.dart';
-import '../controllers/todo_edit_controller.dart';
 import '../pages/history_page.dart';
 import 'routes.dart';
 
@@ -19,10 +17,9 @@ class AppPages {
       binding: LoginBinding(),
     ),
     GetPage(
-      
-      name: AppRoutes.dashboard,
-      page: () => DrawerPage(),
-      binding: DrawerBinding(),
+      name: AppRoutes.register, // ✅ new
+      page: () => RegisterPage(),
+      binding: LoginBinding(),
     ),
     GetPage(
       name: AppRoutes.home,
@@ -39,7 +36,7 @@ class AppPages {
       page: () => TodoEditPage(),
       binding: DrawerBinding(),
     ),
-    GetPage( 
+    GetPage(
       name: AppRoutes.history,
       page: () => HistoryPage(),
       binding: DrawerBinding(),

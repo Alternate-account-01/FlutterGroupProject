@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/add_todo_controller.dart';
 import '../controllers/home_controller.dart';
 import '../controllers/todo_edit_controller.dart';
+import '../controllers/drawer_controller.dart'; // ✅ import drawer controller
 import '../widgets/task_card.dart';
 import 'add_todo_page.dart';
 import 'todo_edit_page.dart';
@@ -16,6 +17,9 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
+
+    
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Get.lazyPut(() => AddTodoController());
@@ -30,6 +34,7 @@ class HomePage extends StatelessWidget {
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white, size: 30),
       ),
+
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,8 +65,10 @@ class HomePage extends StatelessWidget {
               child: Obx(() {
                 if (controller.pendingTodos.isEmpty) {
                   return const Center(
-                    child: Text("No pending tasks!",
-                        style: TextStyle(fontSize: 18, color: Colors.grey)),
+                    child: Text(
+                      "No pending tasks!",
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
                   );
                 }
                 return ListView.builder(
@@ -69,7 +76,8 @@ class HomePage extends StatelessWidget {
                   itemCount: controller.pendingTodos.length,
                   itemBuilder: (context, index) {
                     final todoFromPendingList = controller.pendingTodos[index];
-                    final originalIndex = controller.todos.indexOf(todoFromPendingList);
+                    final originalIndex =
+                        controller.todos.indexOf(todoFromPendingList);
 
                     return TaskCard(
                       todo: todoFromPendingList,
@@ -146,8 +154,7 @@ class HomePage extends StatelessWidget {
   void _showDeleteDialog(BuildContext context, int index) {
     Get.dialog(
       AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -156,15 +163,12 @@ class HomePage extends StatelessWidget {
                 color: Colors.red.shade400, size: 50),
             const SizedBox(height: 16),
             const Text("Delete Permanently?",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             const Text(
               "This action cannot be undone.",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.black54, fontSize: 14),
+              style: TextStyle(color: Colors.black54, fontSize: 14),
             ),
             const SizedBox(height: 24),
             Row(
@@ -173,18 +177,14 @@ class HomePage extends StatelessWidget {
                   child: OutlinedButton(
                     onPressed: () => Get.back(),
                     style: OutlinedButton.styleFrom(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 12),
-                      side: BorderSide(
-                          color: Colors.grey.shade300),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      side: BorderSide(color: Colors.grey.shade300),
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text("Cancel",
-                        style: TextStyle(
-                            color: Colors.black87)),
+                    child:
+                        const Text("Cancel", style: TextStyle(color: Colors.black87)),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -198,18 +198,15 @@ class HomePage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red.shade400,
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     child: const Text("Delete",
                         style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)),
+                            color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],

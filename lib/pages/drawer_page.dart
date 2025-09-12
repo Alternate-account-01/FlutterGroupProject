@@ -47,14 +47,36 @@ class DrawerPage extends StatelessWidget {
             },
           ),
           actions: [
+            // ✅ History button
             IconButton(
-              icon: const Icon(Icons.schedule_outlined, size: 26),
-              onPressed: () {},
+              icon: Icon(
+                Icons.history_rounded,
+                size: 26,
+                color: controller.selectedIndex.value == 1
+                    ? const Color(0xFF6777EF) // highlight if active
+                    : Colors.grey[700],
+              ),
+              tooltip: "History",
+              onPressed: () {
+                controller.changePage(1); // Go to History page
+              },
             ),
+
+            // ✅ Todo List button
             IconButton(
-              icon: const Icon(Icons.notifications_none_outlined, size: 26),
-              onPressed: () {},
+              icon: Icon(
+                Icons.list_alt_rounded,
+                size: 26,
+                color: controller.selectedIndex.value == 0
+                    ? const Color(0xFF6777EF) // highlight if active
+                    : Colors.grey[700],
+              ),
+              tooltip: "Todo List",
+              onPressed: () {
+                controller.changePage(0); // Go to Todo List page
+              },
             ),
+
             const SizedBox(width: 8),
           ],
         ),

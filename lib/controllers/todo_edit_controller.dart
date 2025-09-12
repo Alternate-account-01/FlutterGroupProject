@@ -12,6 +12,7 @@ class TodoEditController extends GetxController {
   final titleController = TextEditingController();
   final descController = TextEditingController();
   final categoryController = TextEditingController();
+  final dueDateController = TextEditingController(); // ✅ NEW
 
   @override
   void onInit() {
@@ -23,6 +24,7 @@ class TodoEditController extends GetxController {
     titleController.text = todo.title;
     descController.text = todo.description;
     categoryController.text = todo.category;
+    dueDateController.text = todo.dueDate ?? ""; // ✅ pre-fill if exists
   }
 
   void saveTodo() {
@@ -30,6 +32,7 @@ class TodoEditController extends GetxController {
       title: titleController.text.trim(),
       description: descController.text.trim(),
       category: categoryController.text.trim(),
+      dueDate: dueDateController.text.trim(), // ✅ save it too
       isDone: todo.isDone,
     );
 

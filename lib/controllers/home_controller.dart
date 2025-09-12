@@ -1,37 +1,38 @@
 import 'package:get/get.dart';
 import '../models/todo_model.dart';
 
+
 class HomeController extends GetxController {
   var todos = <TodoModel>[
     TodoModel(
       title: "Belajar Flutter",
       description: "Membuat aplikasi Todo dengan GetX",
       category: "Sekolah",
-      isDone: false,
+      dueDate: "2025-09-15", // dummy date
     ),
     TodoModel(
       title: "Meeting Project",
-      description: "Diskusi fitur dengan tim",
+      description: "Diskusi tentang progres aplikasi",
       category: "Pekerjaan",
-      isDone: false,
-    ),
-    TodoModel(
-      title: "Olahraga",
-      description: "Jogging 30 menit di taman",
-      category: "Pribadi",
-      isDone: true,
+      dueDate: "2025-09-20",
     ),
     TodoModel(
       title: "Belanja Bulanan",
-      description: "Beli sayur, beras, dan kebutuhan dapur",
-      category: "Keluarga",
-      isDone: false,
+      description: "Pergi ke supermarket untuk kebutuhan dapur",
+      category: "Pribadi",
+      dueDate: "2025-09-18",
     ),
     TodoModel(
-      title: "Baca Buku",
-      description: "Selesaikan bab 3 Clean Code",
-      category: "Pribadi",
-      isDone: false,
+      title: "Kumpul Keluarga",
+      description: "Makan malam bersama keluarga besar",
+      category: "Keluarga",
+      dueDate: "2025-09-22",
+    ),
+    TodoModel(
+      title: "Mengerjakan Tugas Matematika",
+      description: "Kerjakan soal latihan bab aritmatika",
+      category: "Sekolah",
+      dueDate: "2025-09-25",
     ),
   ].obs;
 
