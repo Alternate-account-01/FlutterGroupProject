@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/login_controller.dart';
-import '../widgets/PrimaryButton.dart';
-import '../widgets/InputField.dart';
+import '../widgets/input_field.dart';
+import '../widgets/primary_button.dart';
+import 'drawer_page.dart';
 
 class LoginPage extends StatelessWidget {
-  final TextEditingController usernameController = TextEditingController();
+  LoginPage({super.key});
+
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final LoginController loginController = Get.find();
+
+  final RxBool isPasswordHidden = true.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +18,7 @@ class LoginPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
+            colors: [Color(0xFF8A2387), Color(0xFF5A67E8)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -23,42 +26,109 @@ class LoginPage extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.lock_outline, size: 100, color: Colors.white),
-                const SizedBox(height: 16),
-                const Text(
-                  "Welcome Back",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
                   ),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  "Please sign in to continue",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70,
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.check_circle_outline_rounded,
+                      color: Color(0xFF6777EF), size: 48),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "TodoMaster",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 24),
-                InputField(controller: usernameController, hint: "Username", icon: Icons.person),
-                const SizedBox(height: 12),
-                InputField(controller: passwordController, hint: "Password", obscureText: true, icon: Icons.lock),
-                const SizedBox(height: 20),
-                PrimaryButton(
-                  text: "Login",
-                  onPressed: () {
-                    loginController.login(
-                      usernameController.text,
-                      passwordController.text,
-                    );
-                  },
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  const Text(
+                    "Stay organized, stay productive",
+                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                  ),
+                  const SizedBox(height: 32),
+
+                  // Input Fields
+                  InputField(
+                    controller: emailController,
+                    label: "Email",
+                    hintText: "Enter your email",
+                  ),
+                  const SizedBox(height: 20),
+                  Obx(
+                    () => InputField(
+                      controller: passwordController,
+                      label: "Password",
+                      hintText: "Enter your password",
+                      isPassword: true,
+                      obscureText: isPasswordHidden.value,
+                      onVisibilityToggle: () {
+                        isPasswordHidden.value = !isPasswordHidden.value;
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+
+                  PrimaryButton(
+                    text: "Sign In",
+                    onPressed: () {
+                      Get.to(() => DrawerPage());
+                      print("Email: ${emailController.text}");
+                      print("Password: ${passwordController.text}");
+                    },
+                  ),
+                  const SizedBox(height: 24),
+
+                  Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          "or",
+                          style: TextStyle(color: Colors.grey.shade400),
+                        ),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () {
+                      },
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        side: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      child: const Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
