@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/add_todo_controller.dart';
 import '../controllers/home_controller.dart';
 import '../controllers/todo_edit_controller.dart';
-import '../controllers/drawer_controller.dart'; // ✅ import drawer controller
+import '../controllers/drawer_controller.dart';
 import '../widgets/task_card.dart';
 import 'add_todo_page.dart';
 import 'todo_edit_page.dart';
@@ -17,9 +17,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-
-    
-
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Get.lazyPut(() => AddTodoController());
@@ -34,7 +31,6 @@ class HomePage extends StatelessWidget {
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white, size: 30),
       ),
-
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,23 +75,96 @@ class HomePage extends StatelessWidget {
                     final originalIndex =
                         controller.todos.indexOf(todoFromPendingList);
 
-                    return TaskCard(
-                      todo: todoFromPendingList,
-                      onMarkDone: () => controller.markDone(originalIndex),
-                      onDelete: () => _showDeleteDialog(context, originalIndex),
-                      onEdit: () {
-                        final fullTodo = controller.todos[originalIndex];
-                        Get.to(
-                          () => const TodoEditPage(),
-                          arguments: {
-                            'todo': fullTodo,
-                            'index': originalIndex,
-                          },
-                          binding: BindingsBuilder(() {
-                            Get.lazyPut(() => TodoEditController());
-                          }),
-                        );
+                    return Dismissible(
+                      key: Key(todoFromPendingList.title +
+                          originalIndex.toString()),
+                      
+                      onDismissed: (direction) {
+                        if (direction == DismissDirection.endToStart) {
+                          final taskTitle = controller.todos[originalIndex].title;
+                          controller.markDone(originalIndex);
+                          Get.snackbar(
+                            'Task Completed!',
+                            '"$taskTitle" has been moved to history.',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.green,
+                            colorText: Colors.white,
+                          );
+                        } 
+                        // JIKA GESER KANAN (DELETE)
+                        else if (direction == DismissDirection.startToEnd) {
+                          final removedTodo = controller.todos[originalIndex];
+                          controller.todos.removeAt(originalIndex);
+
+                          Get.snackbar(
+                            'Task Deleted',
+                            '"${removedTodo.title}"',
+                            snackPosition: SnackPosition.BOTTOM,
+                            duration: const Duration(seconds: 4),
+                            backgroundColor: Colors.red.shade400,
+                            colorText: Colors.white,
+                            mainButton: TextButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.white.withOpacity(0.2),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)
+                                ),
+                              ),
+                              onPressed: () {
+                                controller.todos.insert(originalIndex, removedTodo);
+                                if (Get.isSnackbarOpen) {
+                                  Get.back();
+                                }
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                  "UNDO",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
                       },
+                      
+                      background: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.red.shade400,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        alignment: Alignment.centerLeft,
+                        child: const Icon(Icons.delete_outline,
+                            color: Colors.white),
+                      ),
+                      secondaryBackground: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade400,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        alignment: Alignment.centerRight,
+                        child: const Icon(Icons.check, color: Colors.white),
+                      ),
+                      child: TaskCard(
+                        todo: todoFromPendingList,
+                        onEdit: () {
+                          final fullTodo = controller.todos[originalIndex];
+                          Get.to(
+                            () => const TodoEditPage(),
+                            arguments: {
+                              'todo': fullTodo,
+                              'index': originalIndex,
+                            },
+                            binding: BindingsBuilder(() {
+                              Get.lazyPut(() => TodoEditController());
+                            }),
+                          );
+                        },
+                      ),
                     );
                   },
                 );
@@ -183,8 +252,8 @@ class HomePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child:
-                        const Text("Cancel", style: TextStyle(color: Colors.black87)),
+                    child: const Text("Cancel",
+                        style: TextStyle(color: Colors.black87)),
                   ),
                 ),
                 const SizedBox(width: 12),
