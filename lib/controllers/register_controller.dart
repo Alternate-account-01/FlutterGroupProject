@@ -15,8 +15,8 @@ class RegisterController extends GetxController {
       return;
     }
 
-    // ✅ Dummy success
-    Get.snackbar("Success", "Account created successfully");
+    // ✅ Dummy success (no real save)
+    Get.snackbar("Success", "Account created successfully (dummy)");
     Get.offAllNamed('/login');
   }
 }
