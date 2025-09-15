@@ -39,7 +39,7 @@ class ProfileCard extends StatelessWidget {
               CircleAvatar(
                 radius: 30,
                 backgroundColor: Colors.grey.shade200,
-                backgroundImage: AssetImage(imagePath),
+                backgroundImage: NetworkImage(imagePath),//yow, Galih here, i don fucking know what batshit happens to your yaml or anything, but i tried network image and it works
               ),
               const SizedBox(width: 16),
               Expanded(
