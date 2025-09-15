@@ -9,29 +9,18 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeController homeController = Get.find<HomeController>();
-    final now = DateTime.now();
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      
       body: Obx(() {
-        final List<TodoModel> completed = homeController.completedTodos;
+        final completed = homeController.completedTodos;
 
-        // Stats
-        final int completedCount = completed.length;
-        final int thisMonthCount = completed.where((t) {
-          if (t.dueDate == null || t.dueDate!.isEmpty) return false;
-          final dt = DateTime.tryParse(t.dueDate!);
-          return dt != null && dt.month == now.month && dt.year == now.year;
-        }).length;
-        final int allTimeCount = homeController.todos.length;
-
-        // Group by due date relative to today
+        final now = DateTime.now();
         final Map<String, List<TodoModel>> groups = {
           'Today': [],
           'Yesterday': [],
           'Earlier': [],
         };
-
         for (final t in completed) {
           DateTime? due;
           if (t.dueDate != null && t.dueDate!.isNotEmpty) {
@@ -42,13 +31,8 @@ class HistoryPage extends StatelessWidget {
             final todayDate = DateTime(now.year, now.month, now.day);
             final dueDate = DateTime(due.year, due.month, due.day);
             final diff = todayDate.difference(dueDate).inDays;
-            if (diff == 0) {
-              key = 'Today';
-            } else if (diff == 1) {
-              key = 'Yesterday';
-            } else {
-              key = 'Earlier';
-            }
+            if (diff == 0) key = 'Today';
+            else if (diff == 1) key = 'Yesterday';
           }
           groups[key]!.add(t);
         }
@@ -56,61 +40,143 @@ class HistoryPage extends StatelessWidget {
         return ListView(
           padding: const EdgeInsets.symmetric(vertical: 16),
           children: [
-            // Stats header
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _statItem(completedCount.toString(), "Completed", Colors.green),
-                      _statItem(thisMonthCount.toString(), "This Month", Colors.blue),
-                      _statItem(allTimeCount.toString(), "All Time", Colors.black87),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        // clear completed tasks
-                        Get.defaultDialog(
-                          title: 'Clear all history?',
-                          middleText: 'This will remove all completed tasks permanently.',
-                          textCancel: 'Cancel',
-                          textConfirm: 'Clear',
-                          confirmTextColor: Colors.white,
-                          onConfirm: () {
-                            homeController.todos.removeWhere((t) => t.isDone);
-                            Get.back();
-                          },
-                        );
-                      },
-                      icon: const Icon(Icons.delete_outline, color: Colors.red),
-                      label: const Text("Clear All", style: TextStyle(color: Colors.red)),
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: Colors.red.shade100),
-                        backgroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
+            _buildStatsHeader(completed.length, homeController),
             const SizedBox(height: 12),
-
-            // Group sections in order
-            if (groups['Today']!.isNotEmpty) _buildGroupSection('Today', groups['Today']!, homeController),
-            if (groups['Yesterday']!.isNotEmpty) _buildGroupSection('Yesterday', groups['Yesterday']!, homeController),
-            if (groups['Earlier']!.isNotEmpty) _buildGroupSection('Earlier', groups['Earlier']!, homeController),
+            if (groups['Today']!.isNotEmpty)
+              _buildGroupSection('Today', groups['Today']!, homeController),
+            if (groups['Yesterday']!.isNotEmpty)
+              _buildGroupSection(
+                  'Yesterday', groups['Yesterday']!, homeController),
+            if (groups['Earlier']!.isNotEmpty)
+              _buildGroupSection('Earlier', groups['Earlier']!, homeController),
+            if (completed.isEmpty)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 100),
+                  child: Text(
+                    'No completed tasks yet.',
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                ),
+              ),
             const SizedBox(height: 24),
           ],
         );
       }),
+    );
+  }
+
+  Widget _buildStatsHeader(int completedCount, HomeController homeController) {
+    final allTimeCount = homeController.todos.length;
+    const thisMonthCount = 0;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _statItem(completedCount.toString(), "Completed", Colors.green),
+              _statItem(thisMonthCount.toString(), "This Month", Colors.blue),
+              _statItem(allTimeCount.toString(), "All Time", Colors.black87),
+            ],
+          ),
+          const SizedBox(height: 16),
+          if (completedCount > 0)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  Get.dialog(
+                    AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.delete_sweep_outlined,
+                              color: Colors.red.shade400, size: 50),
+                          const SizedBox(height: 16),
+                          const Text(
+                            "Clear All History?",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "This will permanently delete all ${homeController.completedTodos.length} completed tasks.",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                color: Colors.black54, fontSize: 14),
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: OutlinedButton(
+                                  onPressed: () => Get.back(),
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
+                                    side: BorderSide(
+                                        color: Colors.grey.shade300),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  child: const Text("Cancel",
+                                      style:
+                                          TextStyle(color: Colors.black87)),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    homeController.todos
+                                        .removeWhere((t) => t.isDone);
+                                    Get.back();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red.shade400,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12),
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    "Clear",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.delete_outline,
+                    color: Colors.red, size: 20),
+                label: const Text("Clear History",
+                    style: TextStyle(color: Colors.red)),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: Colors.red.shade100),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -127,141 +193,122 @@ class HistoryPage extends StatelessWidget {
     );
   }
 
-  Widget _buildGroupSection(String title, List<TodoModel> list, HomeController homeController) {
+  Widget _buildGroupSection(
+      String title, List<TodoModel> list, HomeController homeController) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // header row: Title + count
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              Text("${list.length} completed", style: TextStyle(color: Colors.green.shade600)),
-            ],
+          Text(title,
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
+          ListView.separated(
+            itemCount: list.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            separatorBuilder: (context, index) => const SizedBox(height: 10),
+            itemBuilder: (context, index) {
+              final todo = list[index];
+              final realIndex = homeController.todos.indexOf(todo);
+
+              return Dismissible(
+                key: Key(todo.title + realIndex.toString()),
+                onDismissed: (direction) {
+                  if (direction == DismissDirection.startToEnd) {
+                    if (realIndex != -1) homeController.undoDone(realIndex);
+                    Get.snackbar(
+                      'Task Restored',
+                      '"${todo.title}" has been moved back to your tasks.',
+                      snackPosition: SnackPosition.BOTTOM,
+                    );
+                  } else if (direction == DismissDirection.endToStart) {
+                     if (realIndex != -1) homeController.deleteTodo(realIndex);
+                     Get.snackbar(
+                      'Task Deleted',
+                      '"${todo.title}" has been permanently deleted.',
+                      snackPosition: SnackPosition.BOTTOM,
+                    );
+                  }
+                },
+                background: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade400,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  alignment: Alignment.centerLeft,
+                  child: const Icon(Icons.undo_rounded, color: Colors.white),
+                ),
+                secondaryBackground: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade400,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  alignment: Alignment.centerRight,
+                  child: const Icon(Icons.delete_outline, color: Colors.white),
+                ),
+                child: _buildHistoryCard(todo),
+              );
+            },
           ),
-          const SizedBox(height: 8),
-          // items
-          ...list.map((todo) {
-            final realIndex = homeController.todos.indexOf(todo);
-            final priority = _getPriority(todo.category);
-            return Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.grey.shade200),
-                boxShadow: [
-                  BoxShadow(color: Colors.grey.withOpacity(0.03), blurRadius: 6, offset: const Offset(0, 3)),
-                ],
-              ),
-              child: Row(
-                children: [
-                  // left checked icon
-                  Icon(Icons.check_circle, color: Colors.green.shade600, size: 26),
-                  const SizedBox(width: 12),
-
-                  // content
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(todo.title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black87)),
-                        if (todo.description.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 6.0, bottom: 6),
-                            child: Text(todo.description, style: TextStyle(color: Colors.grey.shade600)),
-                          ),
-                        Row(
-                          children: [
-                            Container(width: 8, height: 8, decoration: BoxDecoration(shape: BoxShape.circle, color: priority['color'])),
-                            const SizedBox(width: 6),
-                            Text("Was ${priority['level']}", style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
-                            const Spacer(),
-                            if (todo.dueDate != null && todo.dueDate!.isNotEmpty)
-                              Text("Due: ${todo.dueDate}", style: const TextStyle(color: Colors.green, fontSize: 13)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // actions column: undo + delete
-                  Column(
-                    children: [
-                      // Undo with confirmation
-                      IconButton(
-                        onPressed: () {
-                          if (realIndex != -1) {
-                            Get.dialog(
-                              AlertDialog(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                title: const Text('Undo Task?'),
-                                content: const Text('Are you sure you want to mark this task as not completed?'),
-                                actions: [
-                                  TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
-                                  TextButton(
-                                    onPressed: () {
-                                      homeController.undoDone(realIndex);
-                                      Get.back();
-                                    },
-                                    child: const Text('Yes, Undo'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                        },
-                        icon: Icon(Icons.undo_rounded, color: Colors.orange.shade400),
-                        tooltip: 'Undo',
-                      ),
-
-                      // Delete
-                      Container(
-                        margin: const EdgeInsets.only(top: 6),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.red.shade100),
-                          color: Colors.red.shade50,
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            Get.dialog(
-                              AlertDialog(
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                title: const Text('Delete Permanently?'),
-                                content: const Text('This action cannot be undone.'),
-                                actions: [
-                                  TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
-                                  TextButton(
-                                    onPressed: () {
-                                      if (realIndex != -1) homeController.deleteTodo(realIndex);
-                                      Get.back();
-                                    },
-                                    child: const Text('Delete', style: TextStyle(color: Colors.red)),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.close, color: Colors.red),
-                          tooltip: 'Delete',
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
         ],
       ),
     );
   }
 
-  // Priority helper
+  Widget _buildHistoryCard(TodoModel todo) {
+    final priority = _getPriority(todo.category);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.check_circle, color: Colors.green.shade600, size: 26),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  todo.title,
+                  style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87),
+                ),
+                if (todo.description.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child:
+                        Text(todo.description, style: TextStyle(color: Colors.grey.shade600)),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: priority['color'].withOpacity(0.1),
+              borderRadius: BorderRadius.circular(6)
+            ),
+            child: Text(
+              priority['level'],
+              style: TextStyle(color: priority['color'], fontWeight: FontWeight.bold, fontSize: 12),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Map<String, dynamic> _getPriority(String? category) {
     switch (category) {
       case 'Pekerjaan':

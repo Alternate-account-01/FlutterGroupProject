@@ -18,69 +18,102 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.grey.shade200,
-                backgroundImage: NetworkImage(imagePath),//yow, Galih here, i don fucking know what batshit happens to your yaml or anything, but i tried network image and it works
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  nama,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
+    // Tema warna utama
+    const themeColor = Color(0xFF4285F4); // Google Blue, bisa diganti
+
+    return Stack(
+      // Mengizinkan CircleAvatar keluar dari batas Card
+      clipBehavior: Clip.none,
+      alignment: Alignment.topCenter,
+      children: [
+        // Konten utama kartu
+        Container(
+          // Margin atas untuk memberi ruang bagi CircleAvatar
+          margin: const EdgeInsets.only(top: 50),
+          padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          const Divider(),
-          const SizedBox(height: 12),
-          // Menggunakan widget _InfoRow yang ada di file yang sama
-          _InfoRow(icon: Icons.school_outlined, text: kelas),
-          const SizedBox(height: 12),
-          _InfoRow(
-              icon: Icons.format_list_numbered_rounded,
-              text: "Absen No. $absen"),
-          const SizedBox(height: 12),
-          _InfoRow(icon: Icons.email_outlined, text: gmail),
-        ],
-      ),
+          child: Column(
+            children: [
+              Text(
+                nama,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                kelas,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Divider(height: 1),
+              const SizedBox(height: 20),
+              _InfoRow(
+                icon: Icons.format_list_numbered_rounded,
+                text: "Absen No. $absen",
+                iconColor: themeColor,
+              ),
+              const SizedBox(height: 16),
+              _InfoRow(
+                icon: Icons.email_outlined,
+                text: gmail,
+                iconColor: themeColor,
+              ),
+            ],
+          ),
+        ),
+        
+        Positioned(
+          top: 0,
+          child: CircleAvatar(
+            radius: 50,
+            backgroundColor: Colors.white,
+            child: CircleAvatar(
+              radius: 46,
+              backgroundColor: Colors.grey.shade200,
+              backgroundImage: NetworkImage(imagePath),
+              onBackgroundImageError: (exception, stackTrace) {
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
 
-// Widget _InfoRow tetap private karena hanya digunakan oleh ProfileCard.
 class _InfoRow extends StatelessWidget {
   final IconData icon;
   final String text;
-  const _InfoRow({required this.icon, required this.text});
+  final Color iconColor;
+
+  const _InfoRow({
+    required this.icon,
+    required this.text,
+    this.iconColor = Colors.black54,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, color: Colors.blue.shade700, size: 22),
+        Icon(icon, color: iconColor, size: 22),
         const SizedBox(width: 16),
         Expanded(
           child: Text(

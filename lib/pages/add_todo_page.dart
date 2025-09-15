@@ -5,7 +5,7 @@ import '../controllers/add_todo_controller.dart';
 class AddTodoPage extends StatelessWidget {
   AddTodoPage({super.key});
 
-  final AddTodoController controller = Get.put(AddTodoController());
+  final AddTodoController controller = Get.find<AddTodoController>(); // Gunakan Get.find jika sudah di-lazyPut
   final RxString selectedPriority = "Low Priority".obs;
 
   @override
@@ -37,7 +37,6 @@ class AddTodoPage extends StatelessWidget {
                     const SizedBox(height: 20),
                     _buildUrgencySelector(),
                     const SizedBox(height: 20),
-                    // ✅ now using controller.dueDateCtrl
                     _buildTextField(controller.dueDateCtrl, "Due Date", "Select date",
                         readOnly: true, icon: Icons.calendar_today_outlined),
                     const SizedBox(height: 30),
@@ -52,6 +51,74 @@ class AddTodoPage extends StatelessWidget {
     );
   }
 
+  // --- PERUBAHAN UTAMA ADA DI DALAM FUNGSI INI ---
+  Widget _buildActionButtons() {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton(
+            onPressed: () => Get.back(),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              side: const BorderSide(color: Colors.white54),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text("Cancel", style: TextStyle(color: Colors.white)),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: ElevatedButton(
+            onPressed: () {
+              // --- VALIDASI DAN SNACKBAR DITAMBAHKAN DI SINI (DI DALAM PAGE) ---
+              if (controller.titleCtrl.text.trim().isEmpty) {
+                // Jika judul kosong, tampilkan snackbar dari bawah
+                Get.snackbar(
+                  "Input Error",
+                  "Task Name is required.",
+                  snackPosition: SnackPosition.BOTTOM, // Posisi di bawah
+                  backgroundColor: Colors.orange.shade600,
+                  colorText: Colors.white,
+                  icon: const Icon(Icons.warning_amber_rounded, color: Colors.white),
+                  margin: const EdgeInsets.all(12),
+                  borderRadius: 12,
+                );
+              } else {
+                // Jika valid, lanjutkan proses seperti biasa
+                switch (selectedPriority.value) {
+                  case "Medium Priority":
+                    controller.categoryCtrl.text = "Sekolah";
+                    break;
+                  case "High Priority":
+                    controller.categoryCtrl.text = "Pekerjaan";
+                    break;
+                  default:
+                    controller.categoryCtrl.text = "Pribadi";
+                    break;
+                }
+                controller.saveTodo();
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              backgroundColor: const Color(0xFF5A67E8),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text(
+              "Create Task",
+              style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  // Sisa kode tidak ada perubahan
   Widget _buildHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,54 +146,6 @@ class AddTodoPage extends StatelessWidget {
                 _buildPriorityChip("High Priority"),
               ],
             )),
-      ],
-    );
-  }
-
-  Widget _buildActionButtons() {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton(
-            onPressed: () => Get.back(),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              side: const BorderSide(color: Colors.white54),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            child: const Text("Cancel", style: TextStyle(color: Colors.white)),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-              // Logika mapping dari state lokal ke controller
-              switch (selectedPriority.value) {
-                case "Medium Priority":
-                  controller.categoryCtrl.text = "Sekolah";
-                  break;
-                case "High Priority":
-                  controller.categoryCtrl.text = "Pekerjaan";
-                  break;
-                default:
-                  controller.categoryCtrl.text = "Pribadi";
-                  break;
-              }
-              controller.saveTodo();
-            },
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              backgroundColor: const Color(0xFF5A67E8),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            child: const Text("Create Task",
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
-          ),
-        )
       ],
     );
   }
@@ -161,18 +180,17 @@ class AddTodoPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: Color(0xFF5A67E8))),
           ),
-          // ✅ if it's the due date field, open picker
           onTap: readOnly && icon == Icons.calendar_today_outlined
               ? () async {
                   final pickedDate = await showDatePicker(
                     context: Get.context!,
                     initialDate: DateTime.now(),
-                    firstDate: DateTime.now(),
+                    firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                   );
                   if (pickedDate != null) {
                     textController.text =
-                        "${pickedDate.day}-${pickedDate.month}-${pickedDate.year}";
+                        "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
                   }
                 }
               : null,
