@@ -72,19 +72,18 @@ class HomePage extends StatelessWidget {
                   itemCount: controller.pendingTodos.length,
                   itemBuilder: (context, index) {
                     final todoFromPendingList = controller.pendingTodos[index];
-                    final originalIndex = controller.todos.indexOf(
-                      todoFromPendingList,
-                    );
+                    final originalIndex =
+                        controller.todos.indexOf(todoFromPendingList);
 
                     return Dismissible(
-                      key: Key(
-                        todoFromPendingList.title + originalIndex.toString(),
-                      ),
-
+                      key: Key(todoFromPendingList.title +
+                          originalIndex.toString()),
+                      
+                      // --- LOGIKA SWIPE TERBARU DITERAPKAN DI SINI ---
                       onDismissed: (direction) {
+                        // JIKA GESER KIRI (MARK AS COMPLETE) -> AKSI LANGSUNG
                         if (direction == DismissDirection.endToStart) {
-                          final taskTitle =
-                              controller.todos[originalIndex].title;
+                          final taskTitle = controller.todos[originalIndex].title;
                           controller.markDone(originalIndex);
                           Get.snackbar(
                             'Task Completed!',
@@ -93,8 +92,8 @@ class HomePage extends StatelessWidget {
                             backgroundColor: Colors.green,
                             colorText: Colors.white,
                           );
-                        }
-                        // JIKA GESER KANAN (DELETE)
+                        } 
+                        // JIKA GESER KANAN (DELETE) -> DENGAN OPSI UNDO
                         else if (direction == DismissDirection.startToEnd) {
                           final removedTodo = controller.todos[originalIndex];
                           controller.todos.removeAt(originalIndex);
@@ -110,14 +109,11 @@ class HomePage extends StatelessWidget {
                               style: TextButton.styleFrom(
                                 backgroundColor: Colors.white.withOpacity(0.2),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(8)
                                 ),
                               ),
                               onPressed: () {
-                                controller.todos.insert(
-                                  originalIndex,
-                                  removedTodo,
-                                );
+                                controller.todos.insert(originalIndex, removedTodo);
                                 if (Get.isSnackbarOpen) {
                                   Get.back();
                                 }
@@ -127,16 +123,15 @@ class HomePage extends StatelessWidget {
                                 child: Text(
                                   "UNDO",
                                   style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
                           );
                         }
                       },
-
+                      
                       background: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         decoration: BoxDecoration(
@@ -144,11 +139,9 @@ class HomePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         alignment: Alignment.centerLeft,
-                        child: const Icon(
-                          Icons.delete_outline,
-                          color: Colors.white,
-                        ),
+                        child: const Icon(Icons.delete_outline, color: Colors.white),
                       ),
+                      
                       secondaryBackground: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         decoration: BoxDecoration(
@@ -158,6 +151,7 @@ class HomePage extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         child: const Icon(Icons.check, color: Colors.white),
                       ),
+                      
                       child: TaskCard(
                         todo: todoFromPendingList,
                         onEdit: () {
@@ -171,6 +165,10 @@ class HomePage extends StatelessWidget {
                             binding: BindingsBuilder(() {
                               Get.lazyPut(() => TodoEditController());
                             }),
+                            // Menambahkan efek overlay
+                            opaque: false,
+                            fullscreenDialog: true,
+                            transition: Transition.fadeIn,
                           );
                         },
                       ),
@@ -185,6 +183,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  // Sisa kode tidak ada perubahan
   Widget _buildStatsHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
