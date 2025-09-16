@@ -10,7 +10,7 @@ class TodoEditPage extends StatelessWidget {
     final TodoEditController controller = Get.find<TodoEditController>();
     final RxString selectedPriority = "Low Priority".obs;
 
-    // Pre-select based on category
+    // Pre-select priority
     switch (controller.categoryController.text) {
       case "Pekerjaan":
         selectedPriority.value = "High Priority";
@@ -25,6 +25,7 @@ class TodoEditPage extends StatelessWidget {
     }
 
     return Scaffold(
+      backgroundColor: Colors.black.withOpacity(0.6), // ✅ same as AddTodoPage
       body: GestureDetector(
         onTap: () => Get.back(),
         child: Center(
@@ -199,9 +200,8 @@ class TodoEditPage extends StatelessWidget {
                     lastDate: DateTime(2100),
                   );
                   if (picked != null) {
-                    textController.text = picked.toIso8601String().split(
-                      "T",
-                    )[0];
+                    textController.text =
+                        "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
                   }
                 }
               : null,
