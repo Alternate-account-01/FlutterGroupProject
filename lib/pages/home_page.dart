@@ -72,16 +72,19 @@ class HomePage extends StatelessWidget {
                   itemCount: controller.pendingTodos.length,
                   itemBuilder: (context, index) {
                     final todoFromPendingList = controller.pendingTodos[index];
-                    final originalIndex =
-                        controller.todos.indexOf(todoFromPendingList);
+                    final originalIndex = controller.todos.indexOf(
+                      todoFromPendingList,
+                    );
 
                     return Dismissible(
-                      key: Key(todoFromPendingList.title +
-                          originalIndex.toString()),
-                      
+                      key: Key(
+                        todoFromPendingList.title + originalIndex.toString(),
+                      ),
+
                       onDismissed: (direction) {
                         if (direction == DismissDirection.endToStart) {
-                          final taskTitle = controller.todos[originalIndex].title;
+                          final taskTitle =
+                              controller.todos[originalIndex].title;
                           controller.markDone(originalIndex);
                           Get.snackbar(
                             'Task Completed!',
@@ -90,7 +93,7 @@ class HomePage extends StatelessWidget {
                             backgroundColor: Colors.green,
                             colorText: Colors.white,
                           );
-                        } 
+                        }
                         // JIKA GESER KANAN (DELETE)
                         else if (direction == DismissDirection.startToEnd) {
                           final removedTodo = controller.todos[originalIndex];
@@ -107,11 +110,14 @@ class HomePage extends StatelessWidget {
                               style: TextButton.styleFrom(
                                 backgroundColor: Colors.white.withOpacity(0.2),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
                               onPressed: () {
-                                controller.todos.insert(originalIndex, removedTodo);
+                                controller.todos.insert(
+                                  originalIndex,
+                                  removedTodo,
+                                );
                                 if (Get.isSnackbarOpen) {
                                   Get.back();
                                 }
@@ -121,15 +127,16 @@ class HomePage extends StatelessWidget {
                                 child: Text(
                                   "UNDO",
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
                           );
                         }
                       },
-                      
+
                       background: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         decoration: BoxDecoration(
@@ -137,8 +144,10 @@ class HomePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         alignment: Alignment.centerLeft,
-                        child: const Icon(Icons.delete_outline,
-                            color: Colors.white),
+                        child: const Icon(
+                          Icons.delete_outline,
+                          color: Colors.white,
+                        ),
                       ),
                       secondaryBackground: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -184,11 +193,20 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildStatItem(
-                controller.todos.length.toString(), "Total Tasks", Colors.blue),
-            _buildStatItem(controller.completedTodos.length.toString(),
-                "Completed", Colors.green),
-            _buildStatItem(controller.pendingTodos.length.toString(), "Pending",
-                Colors.orange),
+              controller.todos.length.toString(),
+              "Total Tasks",
+              Colors.blue,
+            ),
+            _buildStatItem(
+              controller.completedTodos.length.toString(),
+              "Completed",
+              Colors.green,
+            ),
+            _buildStatItem(
+              controller.pendingTodos.length.toString(),
+              "Pending",
+              Colors.orange,
+            ),
             _buildStatItem(
               controller.todos
                   .where((t) => t.category == 'Pekerjaan' && !t.isDone)
@@ -209,13 +227,13 @@ class HomePage extends StatelessWidget {
         Text(
           count,
           style: TextStyle(
-              fontSize: 24, fontWeight: FontWeight.bold, color: color),
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
         ),
         const SizedBox(height: 4),
-        Text(
-          label,
-          style: const TextStyle(color: Colors.grey, fontSize: 14),
-        ),
+        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
       ],
     );
   }
@@ -228,11 +246,16 @@ class HomePage extends StatelessWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.delete_forever_rounded,
-                color: Colors.red.shade400, size: 50),
+            Icon(
+              Icons.delete_forever_rounded,
+              color: Colors.red.shade400,
+              size: 50,
+            ),
             const SizedBox(height: 16),
-            const Text("Delete Permanently?",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text(
+              "Delete Permanently?",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             const Text(
               "This action cannot be undone.",
@@ -252,8 +275,10 @@ class HomePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text("Cancel",
-                        style: TextStyle(color: Colors.black87)),
+                    child: const Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.black87),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -273,9 +298,13 @@ class HomePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text("Delete",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
+                    child: const Text(
+                      "Delete",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],

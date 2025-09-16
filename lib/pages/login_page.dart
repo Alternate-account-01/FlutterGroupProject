@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../widgets/input_field.dart';
 import '../widgets/primary_button.dart';
-import 'drawer_page.dart';
+import '../controllers/login_controller.dart'; // ✅ make sure this is imported
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -62,8 +62,8 @@ class LoginPage extends StatelessWidget {
                   // Input Fields
                   InputField(
                     controller: emailController,
-                    label: "Email",
-                    hintText: "Enter your email",
+                    label: "Username",
+                    hintText: "Enter your username",
                   ),
                   const SizedBox(height: 20),
                   Obx(
@@ -80,12 +80,15 @@ class LoginPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 32),
 
+                  // ✅ Sign In
                   PrimaryButton(
                     text: "Sign In",
                     onPressed: () {
-                      Get.to(() => DrawerPage());
-                      print("Email: ${emailController.text}");
-                      print("Password: ${passwordController.text}");
+                      final loginController = Get.find<LoginController>();
+                      loginController.login(
+                        emailController.text,
+                        passwordController.text,
+                      );
                     },
                   ),
                   const SizedBox(height: 24),
@@ -105,10 +108,12 @@ class LoginPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
 
+                  // ✅ Go to Register Page
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
                       onPressed: () {
+                        Get.toNamed('/register');
                       },
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
