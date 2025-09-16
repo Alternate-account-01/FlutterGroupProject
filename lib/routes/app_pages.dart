@@ -7,7 +7,7 @@ import '../pages/add_todo_page.dart';
 import '../pages/todo_edit_page.dart';
 import '../binding/login_binding.dart';
 import '../pages/history_page.dart';
-import '../pages/drawer_page.dart'; // ✅ import DrawerPage
+import '../pages/drawer_page.dart'; 
 import 'routes.dart';
 
 class AppPages {
@@ -23,7 +23,7 @@ class AppPages {
       binding: LoginBinding(),
     ),
     GetPage(
-      name: AppRoutes.drawer, // ✅ new
+      name: AppRoutes.drawer,
       page: () => DrawerPage(),
       binding: DrawerBinding(),
     ),
@@ -35,11 +35,17 @@ class AppPages {
     GetPage(
       name: AppRoutes.addTodo,
       page: () => AddTodoPage(),
+      transition: Transition.fadeIn,
+      fullscreenDialog: true,          
+      opaque: false,
       binding: DrawerBinding(),
     ),
     GetPage(
       name: AppRoutes.editTodo,
       page: () => TodoEditPage(),
+      transition: Transition.fadeIn,
+      fullscreenDialog: true,          
+      opaque: false,
       binding: DrawerBinding(),
     ),
     GetPage(

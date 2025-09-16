@@ -7,7 +7,8 @@ import '../controllers/drawer_controller.dart';
 import '../widgets/task_card.dart';
 import 'add_todo_page.dart';
 import 'todo_edit_page.dart';
-
+import '../routes/app_pages.dart';
+import '../routes/routes.dart';
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
@@ -18,15 +19,12 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.lazyPut(() => AddTodoController());
-          Get.to(
-            () => AddTodoPage(),
-            fullscreenDialog: true,
-            opaque: false,
-            transition: Transition.fadeIn,
-          );
-        },
+         onPressed: () {
+      Get.toNamed(
+        AppRoutes.addTodo,
+        arguments: {},
+      );
+    },
         backgroundColor: const Color(0xFF6756D6),
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white, size: 30),
@@ -78,12 +76,10 @@ class HomePage extends StatelessWidget {
                     return Dismissible(
                       key: Key(todoFromPendingList.title +
                           originalIndex.toString()),
-                      
-                      // --- LOGIKA SWIPE TERBARU DITERAPKAN DI SINI ---
                       onDismissed: (direction) {
-                        // JIKA GESER KIRI (MARK AS COMPLETE) -> AKSI LANGSUNG
                         if (direction == DismissDirection.endToStart) {
-                          final taskTitle = controller.todos[originalIndex].title;
+                          final taskTitle =
+                              controller.todos[originalIndex].title;
                           controller.markDone(originalIndex);
                           Get.snackbar(
                             'Task Completed!',
@@ -92,10 +88,10 @@ class HomePage extends StatelessWidget {
                             backgroundColor: Colors.green,
                             colorText: Colors.white,
                           );
-                        } 
-                        // JIKA GESER KANAN (DELETE) -> DENGAN OPSI UNDO
-                        else if (direction == DismissDirection.startToEnd) {
-                          final removedTodo = controller.todos[originalIndex];
+                        } else if (direction ==
+                            DismissDirection.startToEnd) {
+                          final removedTodo =
+                              controller.todos[originalIndex];
                           controller.todos.removeAt(originalIndex);
 
                           Get.snackbar(
@@ -107,13 +103,14 @@ class HomePage extends StatelessWidget {
                             colorText: Colors.white,
                             mainButton: TextButton(
                               style: TextButton.styleFrom(
-                                backgroundColor: Colors.white.withOpacity(0.2),
+                                backgroundColor:
+                                    Colors.white.withOpacity(0.2),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)
-                                ),
+                                    borderRadius: BorderRadius.circular(8)),
                               ),
                               onPressed: () {
-                                controller.todos.insert(originalIndex, removedTodo);
+                                controller.todos
+                                    .insert(originalIndex, removedTodo);
                                 if (Get.isSnackbarOpen) {
                                   Get.back();
                                 }
@@ -131,7 +128,6 @@ class HomePage extends StatelessWidget {
                           );
                         }
                       },
-                      
                       background: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         decoration: BoxDecoration(
@@ -139,9 +135,9 @@ class HomePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         alignment: Alignment.centerLeft,
-                        child: const Icon(Icons.delete_outline, color: Colors.white),
+                        child:
+                            const Icon(Icons.delete_outline, color: Colors.white),
                       ),
-                      
                       secondaryBackground: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         decoration: BoxDecoration(
@@ -151,24 +147,16 @@ class HomePage extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         child: const Icon(Icons.check, color: Colors.white),
                       ),
-                      
                       child: TaskCard(
                         todo: todoFromPendingList,
                         onEdit: () {
                           final fullTodo = controller.todos[originalIndex];
-                          Get.to(
-                            () => const TodoEditPage(),
+                          Get.toNamed(
+                            AppRoutes.editTodo,
                             arguments: {
                               'todo': fullTodo,
                               'index': originalIndex,
                             },
-                            binding: BindingsBuilder(() {
-                              Get.lazyPut(() => TodoEditController());
-                            }),
-                            // Menambahkan efek overlay
-                            opaque: false,
-                            fullscreenDialog: true,
-                            transition: Transition.fadeIn,
                           );
                         },
                       ),
@@ -183,7 +171,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Sisa kode tidak ada perubahan
   Widget _buildStatsHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),

@@ -7,4 +7,5 @@ class AppRoutes {
   static const String editTodo = '/edit-todo';
   static const String history = '/history';
   static const String profile = '/profile';
+  
 }

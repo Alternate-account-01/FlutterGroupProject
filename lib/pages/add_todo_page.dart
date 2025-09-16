@@ -213,9 +213,6 @@ class AddTodoPage extends StatelessWidget {
           margin: const EdgeInsets.only(right: 8),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
-              color: isSelected
-                  ? color.withOpacity(0.2)
-                  : Colors.white.withOpacity(0.05),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: isSelected ? color : Colors.white24)),
           child: Row(

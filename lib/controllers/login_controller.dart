@@ -7,7 +7,7 @@ class LoginController extends GetxController {
     if (username == 'admin' && password == 'admin') {
       isLoggedIn.value = true;
       Get.snackbar("Success", "Welcome back, admin!");
-      Get.offAllNamed('/drawer'); // go to home page
+      Get.offAllNamed('/drawer');
     } else {
       Get.snackbar("Error", "Invalid username or password");
     }

@@ -44,6 +44,7 @@ class TaskCard extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Priority bar
           Container(
             width: 4,
             height: 50,
@@ -53,38 +54,65 @@ class TaskCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
+
+          // Content
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Title
                 Text(
                   todo.title,
                   style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
-                const SizedBox(height: 4),
-                Text(todo.description,
-                    style: const TextStyle(color: Colors.black54)),
+
+                // Description (optional)
+                if (todo.description.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    todo.description,
+                    style: const TextStyle(color: Colors.black54),
+                  ),
+                ],
+
                 const SizedBox(height: 12),
+
+                // Priority + Due date
                 Row(
                   children: [
                     Icon(Icons.circle, color: priority['color'], size: 10),
                     const SizedBox(width: 4),
-                    Text(priority['level'],
-                        style: TextStyle(
-                            color: priority['color'],
-                            fontWeight: FontWeight.w500)),
+                    Text(
+                      priority['level'],
+                      style: TextStyle(
+                        color: priority['color'],
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     const Spacer(),
-                    const Text("2h ago",
-                        style: TextStyle(color: Colors.grey)),
+                    if (todo.dueDate != null && todo.dueDate!.isNotEmpty) ...[
+                      const Icon(Icons.calendar_today,
+                          size: 14, color: Colors.blueGrey),
+                      const SizedBox(width: 4),
+                      Text(
+                        todo.dueDate!, // example: "2025-09-20"
+                        style: const TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ],
-                )
+                ),
               ],
             ),
           ),
 
+          // Edit button
           IconButton(
             icon: Icon(Icons.edit_outlined, color: Colors.grey.shade600),
             onPressed: onEdit,
