@@ -13,13 +13,13 @@ class ProfilePage extends StatelessWidget {
         'kelas': "XII PPLG 1",
         'absen': "09",
         'gmail': "daffa.bintang@gmail.com",
-        'imagePath': "images/epic.jpg",
+        'imagePath': "https://cdn.discordapp.com/attachments/1308640731912601600/1417356463583793202/daffa.jpg?ex=68ca2f92&is=68c8de12&hm=588da967a5e9fae5da4606c3997ae616fb0fc41ed73e5d506904c64425d91cb4&",
       },
       {
         'nama': "Rafan Eka Dinata",
         'kelas': "XII PPLG 1",
         'absen': "30",
-        'gmail': "rafaneka@gmail.com",
+        'gmail': "dinata.rafan@gmail.com",
         'imagePath': "https://cdn.discordapp.com/attachments/1417108311622549535/1417108534830563448/WhatsApp_Image_2025-08-30_at_11.22.05_0957ef8f.jpg?ex=68c948ab&is=68c7f72b&hm=1bbd3a495066ba7f628884f8bb38ff09ac29d61df4c05a9478ea510fd47addf8",
       },
       {
