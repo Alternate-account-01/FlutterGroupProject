@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/register_controller.dart';
 import '../widgets/input_field.dart';
 import '../widgets/primary_button.dart';
+import '../controllers/register_controller.dart';
 
-class RegisterPage extends StatelessWidget {
-  RegisterPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
-  final RegisterController controller = Get.find<RegisterController>();
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
 
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+class _RegisterPageState extends State<RegisterPage> {
+  final txtUsername = TextEditingController();
+  final txtPassword = TextEditingController();
+  final txtConfirmPassword = TextEditingController();
+
+  final registerController = Get.find<RegisterController>();
+
+  final RxBool isPasswordHidden = true.obs;
+  final RxBool isConfirmPasswordHidden = true.obs;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, 
+      backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -51,7 +58,7 @@ class RegisterPage extends StatelessWidget {
 
                 // Username
                 InputField(
-                  controller: usernameController,
+                  controller: txtUsername,
                   label: "Username",
                   hintText: "Enter your username",
                 ),
@@ -60,14 +67,13 @@ class RegisterPage extends StatelessWidget {
                 // Password
                 Obx(
                   () => InputField(
-                    controller: passwordController,
+                    controller: txtPassword,
                     label: "Password",
                     hintText: "Enter your password",
                     isPassword: true,
-                    obscureText: controller.isPasswordHidden.value,
+                    obscureText: isPasswordHidden.value,
                     onVisibilityToggle: () {
-                      controller.isPasswordHidden.value =
-                          !controller.isPasswordHidden.value;
+                      isPasswordHidden.value = !isPasswordHidden.value;
                     },
                   ),
                 ),
@@ -76,50 +82,68 @@ class RegisterPage extends StatelessWidget {
                 // Confirm Password
                 Obx(
                   () => InputField(
-                    controller: confirmPasswordController,
+                    controller: txtConfirmPassword,
                     label: "Confirm Password",
                     hintText: "Re-enter your password",
                     isPassword: true,
-                    obscureText: controller.isConfirmPasswordHidden.value,
+                    obscureText: isConfirmPasswordHidden.value,
                     onVisibilityToggle: () {
-                      controller.isConfirmPasswordHidden.value =
-                          !controller.isConfirmPasswordHidden.value;
+                      isConfirmPasswordHidden.value =
+                          !isConfirmPasswordHidden.value;
                     },
                   ),
                 ),
                 const SizedBox(height: 32),
 
-                // Register Button
+                // Register button
                 PrimaryButton(
                   text: "Sign Up",
                   onPressed: () {
-                    controller.register(
-                      usernameController.text,
-                      passwordController.text,
-                      confirmPasswordController.text,
+                    registerController.register(
+                      txtUsername.text.trim(),
+                      txtPassword.text,
+                      txtConfirmPassword.text,
                     );
                   },
                 ),
+
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    const Expanded(child: Divider()),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "or",
+                        style: TextStyle(color: Colors.grey.shade400),
+                      ),
+                    ),
+                    const Expanded(child: Divider()),
+                  ],
+                ),
                 const SizedBox(height: 24),
 
-                // Back to Login
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Already have an account? "),
-                    GestureDetector(
-                      onTap: () {
-                        Get.offAllNamed('/login');
-                      },
-                      child: const Text(
-                        "Sign In",
-                        style: TextStyle(
-                          color: Color(0xFF6777EF),
-                          fontWeight: FontWeight.bold,
-                        ),
+                // Back to login
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () => Get.offAllNamed('/login'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    )
-                  ],
+                      side: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    child: const Text(
+                      "Sign In",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),
@@ -127,5 +151,13 @@ class RegisterPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    txtUsername.dispose();
+    txtPassword.dispose();
+    txtConfirmPassword.dispose();
+    super.dispose();
   }
 }

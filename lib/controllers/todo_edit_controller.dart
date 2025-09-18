@@ -12,7 +12,9 @@ class TodoEditController extends GetxController {
   final titleController = TextEditingController();
   final descController = TextEditingController();
   final categoryController = TextEditingController();
-  final dueDateController = TextEditingController(); // ✅ NEW
+  final dueDateController = TextEditingController();
+
+  final RxString selectedPriority = "Low Priority".obs;
 
   @override
   void onInit() {
@@ -24,7 +26,48 @@ class TodoEditController extends GetxController {
     titleController.text = todo.title;
     descController.text = todo.description;
     categoryController.text = todo.category;
-    dueDateController.text = todo.dueDate ?? ""; // ✅ pre-fill if exists
+    dueDateController.text = todo.dueDate ?? "";
+
+    switch (todo.category) {
+      case "Pekerjaan":
+        selectedPriority.value = "High Priority";
+        break;
+      case "Sekolah":
+      case "Keluarga":
+        selectedPriority.value = "Medium Priority";
+        break;
+      default:
+        selectedPriority.value = "Low Priority";
+        break;
+    }
+  }
+
+  void pickDate(BuildContext context) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.tryParse(dueDateController.text) ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      dueDateController.text =
+          "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+    }
+  }
+
+  void setPriority(String level) {
+    selectedPriority.value = level;
+    switch (level) {
+      case "Medium Priority":
+        categoryController.text = "Sekolah";
+        break;
+      case "High Priority":
+        categoryController.text = "Pekerjaan";
+        break;
+      default:
+        categoryController.text = "Pribadi";
+        break;
+    }
   }
 
   void saveTodo() {
@@ -32,7 +75,7 @@ class TodoEditController extends GetxController {
       title: titleController.text.trim(),
       description: descController.text.trim(),
       category: categoryController.text.trim(),
-      dueDate: dueDateController.text.trim(), // ✅ save it too
+      dueDate: dueDateController.text.trim(),
       isDone: todo.isDone,
     );
 

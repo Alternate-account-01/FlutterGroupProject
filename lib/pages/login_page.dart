@@ -1,21 +1,27 @@
+// login_page.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../widgets/input_field.dart';
 import '../widgets/primary_button.dart';
 import '../controllers/login_controller.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final txtUsername = TextEditingController();
+  final txtPassword = TextEditingController();
+
+  final loginController = Get.find<LoginController>();
 
   final RxBool isPasswordHidden = true.obs;
 
   @override
   Widget build(BuildContext context) {
-    final LoginController loginController = Get.find<LoginController>();
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -41,7 +47,7 @@ class LoginPage extends StatelessWidget {
                     color: Color(0xFF6777EF), size: 48),
                 const SizedBox(height: 16),
                 const Text(
-                  "TodoMaster",
+                  "Welcome Back",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -49,19 +55,23 @@ class LoginPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  "Stay organized, stay productive",
+                  "Sign in to continue",
                   style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
                 const SizedBox(height: 32),
+
+                // Username
                 InputField(
-                  controller: emailController,
+                  controller: txtUsername,
                   label: "Username",
                   hintText: "Enter your username",
                 ),
                 const SizedBox(height: 20),
+
+                // Password
                 Obx(
                   () => InputField(
-                    controller: passwordController,
+                    controller: txtPassword,
                     label: "Password",
                     hintText: "Enter your password",
                     isPassword: true,
@@ -72,56 +82,18 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 32),
+
+                // Login button
                 PrimaryButton(
                   text: "Sign In",
                   onPressed: () {
-                    final String username = emailController.text.trim();
-                    final String password = passwordController.text;
-
-                    if (username.isEmpty || password.isEmpty) {
-                      Get.snackbar(
-                        "Input Incomplete",
-                        "Username and password cannot be empty.",
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.orange.shade600,
-                        colorText: Colors.white,
-                        icon: const Icon(Icons.warning_amber_rounded,
-                            color: Colors.white),
-                        margin: const EdgeInsets.all(12),
-                        borderRadius: 12,
-                      );
-                      return;
-                    }
-
-                    if (username == 'admin' && password == 'admin') {
-                      loginController.isLoggedIn.value = true;
-                      Get.offAllNamed('/drawer');
-                      Get.snackbar(
-                        "Login Successful",
-                        "Welcome back, admin!",
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.green,
-                        colorText: Colors.white,
-                        icon: const Icon(Icons.check_circle_outline,
-                            color: Colors.white),
-                        margin: const EdgeInsets.all(12),
-                        borderRadius: 12,
-                      );
-                    } else {
-                      Get.snackbar(
-                        "Login Failed",
-                        "Invalid username or password.",
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.red.shade400,
-                        colorText: Colors.white,
-                        icon: const Icon(Icons.error_outline_rounded,
-                            color: Colors.white),
-                        margin: const EdgeInsets.all(12),
-                        borderRadius: 12,
-                      );
-                    }
+                    loginController.login(
+                      txtUsername.text.trim(),
+                      txtPassword.text,
+                    );
                   },
                 ),
+
                 const SizedBox(height: 24),
                 Row(
                   children: [
@@ -137,12 +109,12 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 24),
+
+                // Go to register
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () {
-                      Get.toNamed('/register');
-                    },
+                    onPressed: () => Get.offAllNamed('/register'),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
@@ -166,5 +138,12 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    txtUsername.dispose();
+    txtPassword.dispose();
+    super.dispose();
   }
 }

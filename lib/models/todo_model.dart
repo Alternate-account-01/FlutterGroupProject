@@ -3,13 +3,13 @@ class TodoModel {
   String description;
   String category;
   bool isDone;
-  String dueDate; // ✅ new
+  String dueDate; 
 
   TodoModel({
     required this.title,
     required this.description,
     required this.category,
     this.isDone = false,
-    this.dueDate = "", // default empty
+    this.dueDate = "", 
   });
 }

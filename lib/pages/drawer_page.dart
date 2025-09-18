@@ -36,189 +36,207 @@ class DrawerPage extends StatelessWidget {
           centerTitle: true,
           title: Text(
             pageTitles[controller.selectedIndex.value],
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           leading: IconButton(
             icon: const Icon(Icons.menu),
-            onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
-            },
+            onPressed: () => _scaffoldKey.currentState?.openDrawer(),
           ),
           actions: [
-            // ✅ History button
             IconButton(
               icon: Icon(
                 Icons.history_rounded,
                 size: 26,
                 color: controller.selectedIndex.value == 1
-                    ? const Color(0xFF6777EF) // highlight if active
+                    ? const Color(0xFF6777EF)
                     : Colors.grey[700],
               ),
               tooltip: "History",
-              onPressed: () {
-                controller.changePage(1); // Go to History page
-              },
+              onPressed: () => controller.changePage(1),
             ),
-
-            // ✅ Todo List button
             IconButton(
               icon: Icon(
                 Icons.list_alt_rounded,
                 size: 26,
                 color: controller.selectedIndex.value == 0
-                    ? const Color(0xFF6777EF) // highlight if active
+                    ? const Color(0xFF6777EF)
                     : Colors.grey[700],
               ),
               tooltip: "Todo List",
-              onPressed: () {
-                controller.changePage(0); // Go to Todo List page
-              },
+              onPressed: () => controller.changePage(0),
             ),
-
             const SizedBox(width: 8),
           ],
         ),
-        drawer: _buildDrawer(),
-        body: pages[controller.selectedIndex.value],
-      ),
-    );
-  }
-
-  Widget _buildDrawer() {
-    return Drawer(
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                _buildDrawerHeader(),
-                const Padding(
-                  padding: EdgeInsets.only(left: 16.0, top: 20, bottom: 8),
-                  child: Text(
-                    "MENU",
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                  ),
-                ),
-                _buildMenuItem(
-                  icon: Icons.list_alt_rounded,
-                  title: "Todo List",
-                  index: 0,
-                  badgeCount: 6,
-                ),
-                _buildMenuItem(
-                  icon: Icons.history_rounded,
-                  title: "History",
-                  index: 1,
-                ),
-                _buildMenuItem(
-                  icon: Icons.person_outline_rounded,
-                  title: "Profile",
-                  index: 2,
-                ),
-              ],
-            ),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text(
-              "Sign Out",
-              style: TextStyle(color: Colors.red),
-            ),
-            onTap: () {
-              Get.offAllNamed('/login');
-            },
-          ),
-          const SizedBox(height: 16),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDrawerHeader() {
-    return const Padding(
-      padding: EdgeInsets.fromLTRB(16, 60, 16, 20),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: Color(0xFF6777EF),
-            child: Text(
-              "JD",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20),
-            ),
-          ),
-          SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        drawer: Drawer(
+          child: Column(
             children: [
-              Text(
-                "John Doe",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              Text(
-                "john.doe@email.com",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(16, 60, 16, 20),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 24,
+                            backgroundColor: Color(0xFF6777EF),
+                            child: Text(
+                              "JD",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "John Doe",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                "john.doe@email.com",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 16.0, top: 20, bottom: 8),
+                      child: Text(
+                        "MENU",
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ),
 
-  Widget _buildMenuItem({
-    required IconData icon,
-    required String title,
-    required int index,
-    int badgeCount = 0,
-  }) {
-    bool isSelected = controller.selectedIndex.value == index;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      decoration: BoxDecoration(
-        color: isSelected ? const Color(0xFF6777EF) : Colors.transparent,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: ListTile(
-        leading: Icon(icon, color: isSelected ? Colors.white : Colors.grey[600]),
-        title: Text(
-          title,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.grey[800],
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+      
+                    Obx(() {
+                      bool isSelected = controller.selectedIndex.value == 0;
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: isSelected ? const Color(0xFF6777EF) : Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.list_alt_rounded,
+                            color: isSelected ? Colors.white : Colors.grey[600],
+                          ),
+                          title: Text(
+                            "Todo List",
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : Colors.grey[800],
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            ),
+                          ),
+                          trailing: CircleAvatar(
+                            radius: 12,
+                            backgroundColor: isSelected ? Colors.white : Colors.grey[200],
+                            child: Text(
+                              "6",
+                              style: TextStyle(
+                                color: isSelected ? const Color(0xFF6777EF) : Colors.black54,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            controller.changePage(0);
+                            Get.back();
+                          },
+                        ),
+                      );
+                    }),
+
+                    // --- History menu item ---
+                    Obx(() {
+                      bool isSelected = controller.selectedIndex.value == 1;
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: isSelected ? const Color(0xFF6777EF) : Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.history_rounded,
+                            color: isSelected ? Colors.white : Colors.grey[600],
+                          ),
+                          title: Text(
+                            "History",
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : Colors.grey[800],
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            ),
+                          ),
+                          onTap: () {
+                            controller.changePage(1);
+                            Get.back();
+                          },
+                        ),
+                      );
+                    }),
+
+                    // --- Profile menu item ---
+                    Obx(() {
+                      bool isSelected = controller.selectedIndex.value == 2;
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: isSelected ? const Color(0xFF6777EF) : Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.person_outline_rounded,
+                            color: isSelected ? Colors.white : Colors.grey[600],
+                          ),
+                          title: Text(
+                            "Profile",
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : Colors.grey[800],
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            ),
+                          ),
+                          onTap: () {
+                            controller.changePage(2);
+                            Get.back();
+                          },
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.logout, color: Colors.red),
+                title: const Text(
+                  "Sign Out",
+                  style: TextStyle(color: Colors.red),
+                ),
+                onTap: () => Get.offAllNamed('/login'),
+              ),
+              const SizedBox(height: 16),
+            ],
           ),
         ),
-        trailing: badgeCount > 0
-            ? CircleAvatar(
-                radius: 12,
-                backgroundColor: isSelected ? Colors.white : Colors.grey[200],
-                child: Text(
-                  badgeCount.toString(),
-                  style: TextStyle(
-                    color: isSelected ? const Color(0xFF6777EF) : Colors.black54,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              )
-            : null,
-        onTap: () {
-          controller.changePage(index);
-          Get.back();
-        },
+        body: pages[controller.selectedIndex.value],
       ),
     );
   }
