@@ -11,22 +11,21 @@ class TaskCard extends StatelessWidget {
     required this.onEdit,
   });
 
-  Map<String, dynamic> _getPriority(String category) {
-    switch (category) {
-      case 'Pekerjaan':
-        return {'level': 'Urgent', 'color': Colors.red.shade400};
-      case 'Sekolah':
-      case 'Keluarga':
-        return {'level': 'Medium', 'color': Colors.orange.shade400};
-      case 'Pribadi':
+  Map<String, dynamic> _getUrgency(String urgency) {
+    switch (urgency) {
+      case 'High Priority':
+        return {'label': 'Urgent', 'color': Colors.red.shade400};
+      case 'Medium Priority':
+        return {'label': 'Medium', 'color': Colors.orange.shade400};
+      case 'Low Priority':
       default:
-        return {'level': 'Low', 'color': Colors.green.shade400};
+        return {'label': 'Low', 'color': Colors.green.shade400};
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final priority = _getPriority(todo.category);
+    final urgency = _getUrgency(todo.urgency);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -44,12 +43,12 @@ class TaskCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Priority bar
+          // urgency color bar
           Container(
             width: 4,
             height: 50,
             decoration: BoxDecoration(
-              color: priority['color'],
+              color: urgency['color'],
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -70,7 +69,7 @@ class TaskCard extends StatelessWidget {
                   ),
                 ),
 
-                // Description (optional)
+                // Description
                 if (todo.description.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Text(
@@ -81,25 +80,35 @@ class TaskCard extends StatelessWidget {
 
                 const SizedBox(height: 12),
 
-                // Priority + Due date
+                // urgency + category + due date
                 Row(
                   children: [
-                    Icon(Icons.circle, color: priority['color'], size: 10),
+                    Icon(Icons.circle,
+                        color: urgency['color'], size: 10),
                     const SizedBox(width: 4),
                     Text(
-                      priority['level'],
+                      urgency['label'],
                       style: TextStyle(
-                        color: priority['color'],
+                        color: urgency['color'],
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+                    const SizedBox(width: 12),
+                    Text(
+                      todo.category, // Work / Study / Personal
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 12,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
                     const Spacer(),
-                    if (todo.dueDate != null && todo.dueDate!.isNotEmpty) ...[
+                    if (todo.dueDate.isNotEmpty) ...[
                       const Icon(Icons.calendar_today,
                           size: 14, color: Colors.blueGrey),
                       const SizedBox(width: 4),
                       Text(
-                        todo.dueDate!, // example: "2025-09-20"
+                        todo.dueDate,
                         style: const TextStyle(
                           color: Colors.blueGrey,
                           fontSize: 12,

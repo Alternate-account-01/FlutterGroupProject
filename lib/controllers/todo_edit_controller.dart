@@ -11,10 +11,12 @@ class TodoEditController extends GetxController {
 
   final titleController = TextEditingController();
   final descController = TextEditingController();
-  final categoryController = TextEditingController();
+  final urgencyController = TextEditingController();   // dropdown
+  final categoryController = TextEditingController();  // priority
   final dueDateController = TextEditingController();
 
-  final RxString selectedPriority = "Low Priority".obs;
+  final RxString selectedPriority = "Low".obs;     // category
+  final RxString selectedUrgency = "Work".obs;     // urgency
 
   @override
   void onInit() {
@@ -25,21 +27,12 @@ class TodoEditController extends GetxController {
 
     titleController.text = todo.title;
     descController.text = todo.description;
+    urgencyController.text = todo.urgency;
     categoryController.text = todo.category;
-    dueDateController.text = todo.dueDate ?? "";
+    dueDateController.text = todo.dueDate;
 
-    switch (todo.category) {
-      case "Pekerjaan":
-        selectedPriority.value = "High Priority";
-        break;
-      case "Sekolah":
-      case "Keluarga":
-        selectedPriority.value = "Medium Priority";
-        break;
-      default:
-        selectedPriority.value = "Low Priority";
-        break;
-    }
+    selectedUrgency.value = todo.urgency;
+    selectedPriority.value = todo.category;
   }
 
   void pickDate(BuildContext context) async {
@@ -57,23 +50,19 @@ class TodoEditController extends GetxController {
 
   void setPriority(String level) {
     selectedPriority.value = level;
-    switch (level) {
-      case "Medium Priority":
-        categoryController.text = "Sekolah";
-        break;
-      case "High Priority":
-        categoryController.text = "Pekerjaan";
-        break;
-      default:
-        categoryController.text = "Pribadi";
-        break;
-    }
+    categoryController.text = level; // "Low", "Medium", "High"
+  }
+
+  void setUrgency(String type) {
+    selectedUrgency.value = type;
+    urgencyController.text = type; // "Work", "Study", "Personal"
   }
 
   void saveTodo() {
     final updatedTodo = TodoModel(
       title: titleController.text.trim(),
       description: descController.text.trim(),
+      urgency: urgencyController.text.trim(),
       category: categoryController.text.trim(),
       dueDate: dueDateController.text.trim(),
       isDone: todo.isDone,

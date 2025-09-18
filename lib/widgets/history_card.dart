@@ -3,7 +3,7 @@ import '../models/todo_model.dart';
 
 class HistoryCard extends StatelessWidget {
   final TodoModel todo;
-  final Map<String, dynamic> Function(String category) getPriority;
+  final Map<String, dynamic> Function(String urgency) getPriority;
 
   const HistoryCard({
     super.key,
@@ -13,7 +13,7 @@ class HistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final priority = getPriority(todo.category);
+    final priority = getPriority(todo.urgency); // urgency => Urgent/Medium/Low
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -59,8 +59,27 @@ class HistoryCard extends StatelessWidget {
                     ),
                   ),
 
+                // Category (Work/Study/Personal)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.folder_copy_outlined,
+                          size: 14, color: Colors.blueGrey),
+                      const SizedBox(width: 4),
+                      Text(
+                        todo.category, // Work / Study / Personal
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.blueGrey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
                 // Due date (optional)
-                if (todo.dueDate != null && todo.dueDate!.isNotEmpty)
+                if (todo.dueDate.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Row(
@@ -69,7 +88,7 @@ class HistoryCard extends StatelessWidget {
                             size: 14, color: Colors.blueGrey),
                         const SizedBox(width: 4),
                         Text(
-                          todo.dueDate!, // example: "2025-09-20"
+                          todo.dueDate,
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.blueGrey,
@@ -84,7 +103,7 @@ class HistoryCard extends StatelessWidget {
 
           const SizedBox(width: 12),
 
-          // Priority badge
+          // Priority badge (Urgent/Medium/Low)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
