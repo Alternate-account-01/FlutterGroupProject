@@ -7,14 +7,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profiles = [
-      {
-        'nama': "Daffa Ramadhan",
-        'kelas': "XII PPLG 1",
-        'absen': "09",
-        'gmail': "daffa.bintang@gmail.com",
-        'imagePath': "https://cdn.discordapp.com/attachments/1308640731912601600/1417356463583793202/daffa.jpg?ex=68ca2f92&is=68c8de12&hm=588da967a5e9fae5da4606c3997ae616fb0fc41ed73e5d506904c64425d91cb4&",
-      },
+  final profiles = [  
       {
         'nama': "Rafan Eka Dinata",
         'kelas': "XII PPLG 1",
@@ -29,6 +22,13 @@ class ProfilePage extends StatelessWidget {
         'gmail': "rakhanoor12@gmail.com",
         'imagePath': "https://cdn.discordapp.com/attachments/1417108311622549535/1417109670639964160/livereactionadmin.png?ex=68c949ba&is=68c7f83a&hm=e809139de1aff33f9105770b7323fca01e29dff2151f259a7f17f4c1f7857615",
       },
+      {
+        'nama': "Daffa Ramadhan",
+        'kelas': "XII PPLG 1",
+        'absen': "09",
+        'gmail': "daffa.bintang@gmail.com",
+        'imagePath': "https://cdn.discordapp.com/attachments/1308640731912601600/1417356463583793202/daffa.jpg?ex=68ca2f92&is=68c8de12&hm=588da967a5e9fae5da4606c3997ae616fb0fc41ed73e5d506904c64425d91cb4&",
+      }
     ];
 
     return Scaffold(

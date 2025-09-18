@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
 import '../models/todo_model.dart';
+import '../widgets/snackbar_helper.dart';
 import 'history_card.dart';
 
 class GroupSection extends StatelessWidget {
@@ -37,8 +38,7 @@ class GroupSection extends StatelessWidget {
             itemCount: list.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            separatorBuilder: (context, index) =>
-                const SizedBox(height: 10),
+            separatorBuilder: (context, index) => const SizedBox(height: 10),
             itemBuilder: (context, index) {
               final todo = list[index];
               final realIndex = homeController.todos.indexOf(todo);
@@ -47,19 +47,36 @@ class GroupSection extends StatelessWidget {
                 key: Key(todo.title + realIndex.toString()),
                 onDismissed: (direction) {
                   if (direction == DismissDirection.startToEnd) {
+                    // Restore task
                     if (realIndex != -1) homeController.undoDone(realIndex);
-                    Get.snackbar(
-                      'Task Restored',
-                      '"${todo.title}" has been moved back to your tasks.',
-                      snackPosition: SnackPosition.BOTTOM,
+
+                    SnackbarHelper.show(
+                      "Task Restored",
+                      "\"${todo.title}\" has been moved back to your tasks.",
+                      bgColor: Colors.orange,
+                      actionLabel: "UNDO",
+                      onAction: () {
+                        if (realIndex != -1) {
+                          homeController.markDone(realIndex);
+                        }
+                      },
                     );
                   } else if (direction == DismissDirection.endToStart) {
-                    if (realIndex != -1) homeController.deleteTodo(realIndex);
-                    Get.snackbar(
-                      'Task Deleted',
-                      '"${todo.title}" has been permanently deleted.',
-                      snackPosition: SnackPosition.BOTTOM,
-                    );
+                    // Delete permanently
+                    if (realIndex != -1) {
+                      final removedTodo = todo;
+                      homeController.deleteTodo(realIndex);
+
+                      SnackbarHelper.show(
+                        "Task Deleted",
+                        "\"${removedTodo.title}\" has been permanently deleted.",
+                        bgColor: Colors.red.shade400,
+                        actionLabel: "UNDO",
+                        onAction: () {
+                          homeController.todos.insert(realIndex, removedTodo);
+                        },
+                      );
+                    }
                   }
                 },
                 background: Container(
@@ -69,8 +86,7 @@ class GroupSection extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   alignment: Alignment.centerLeft,
-                  child:
-                      const Icon(Icons.undo_rounded, color: Colors.white),
+                  child: const Icon(Icons.undo_rounded, color: Colors.white),
                 ),
                 secondaryBackground: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),

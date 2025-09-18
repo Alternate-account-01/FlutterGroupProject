@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/todo_model.dart';
 import 'home_controller.dart';
+import '../widgets/snackbar_helper.dart';
 
 class AddTodoController extends GetxController {
   final titleCtrl = TextEditingController();
@@ -11,68 +12,67 @@ class AddTodoController extends GetxController {
 
   final HomeController homeController = Get.find<HomeController>();
 
-  // guard against duplicate saves
+ 
   final RxBool isSaving = false.obs;
 
-  void saveTodo() async {
-    if (isSaving.value) return; // prevent re-entry
+void saveTodo() async {
+  if (isSaving.value) return; 
 
-    final title = titleCtrl.text.trim();
-    if (title.isEmpty) {
-      _showSnackbar("Error", "Title cannot be empty", Colors.orange);
-      return;
-    }
-
-    // 🔹 Prevent duplicate titles
-    final exists = homeController.todos.any(
-      (t) => t.title.trim().toLowerCase() == title.toLowerCase(),
-    );
-
-    if (exists) {
-      // ✅ only show once, page stays open
-      if (!Get.isSnackbarOpen) {
-        _showSnackbar("Warning", "Task already exists", Colors.redAccent);
-      }
-      return;
-    }
-
-    isSaving.value = true;
-    try {
-      final newTodo = TodoModel(
-        title: title,
-        description: descCtrl.text.trim(),
-        category: categoryCtrl.text.trim(),
-        dueDate: dueDateCtrl.text.trim(),
-      );
-
-      homeController.todos.add(newTodo);
-      homeController.todos.refresh();
-
-      // ✅ Immediately exit the page
-      Get.back();
-
-      // ✅ Show success while already back on todo list
-      _showSnackbar("Success", "Task added successfully!", Colors.green);
-    } finally {
-      isSaving.value = false;
-    }
+  final title = titleCtrl.text.trim();
+  if (title.isEmpty) {
+    SnackbarHelper.show("Error", "Title cannot be empty", bgColor: Colors.orange);
+    return;
   }
 
-  void _showSnackbar(String title, String message, Color bgColor) {
-    Get.snackbar(
-      title,
-      message,
-      snackPosition: SnackPosition.TOP,
-      backgroundColor: bgColor,
-      colorText: Colors.white,
-      duration: const Duration(seconds: 1), // ⏳ disappear faster
-      animationDuration: const Duration(milliseconds: 200), // ⚡ faster slide in/out
-      margin: const EdgeInsets.all(12),
-      borderRadius: 10,
-      isDismissible: true,
-      forwardAnimationCurve: Curves.easeOutCubic,
-    );
+ 
+  final exists = homeController.todos.any(
+    (t) => t.title.trim().toLowerCase() == title.toLowerCase(),
+  );
+
+  if (exists) {
+    if (!Get.isSnackbarOpen) {
+    SnackbarHelper.show("Warning", "Task already exists", bgColor: Colors.redAccent);}
+    return;
   }
+
+  isSaving.value = true;
+  try {
+    final newTodo = TodoModel(
+      title: title,
+      description: descCtrl.text.trim(),
+      category: categoryCtrl.text.trim(),
+      dueDate: dueDateCtrl.text.trim(),
+    );
+
+    homeController.todos.add(newTodo);
+    homeController.todos.refresh();
+
+    Get.back();
+
+   SnackbarHelper.show("Success", "Task added successfully!", bgColor: Colors.green);
+
+
+  } finally {
+    isSaving.value = false;
+  }
+}
+
+void _showSnackbar(String title, String message, Color bgColor) {
+  Get.snackbar(
+    title,
+    message,
+    snackPosition: SnackPosition.TOP,
+    backgroundColor: bgColor,
+    colorText: Colors.white,
+    duration: const Duration(seconds: 1),
+    animationDuration: const Duration(milliseconds: 200),
+    margin: const EdgeInsets.all(12),
+    borderRadius: 10,
+    isDismissible: true,
+    forwardAnimationCurve: Curves.easeOutCubic,
+  );
+}
+
 
   @override
   void onClose() {

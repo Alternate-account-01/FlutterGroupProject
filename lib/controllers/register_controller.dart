@@ -1,22 +1,18 @@
+// register_controller.dart
 import 'package:get/get.dart';
+import '../widgets/snackbar_helper.dart';
 
-class RegisterController extends GetxController {
-  var isPasswordHidden = true.obs;
-  var isConfirmPasswordHidden = true.obs;
-
+class RegisterController {
   void register(String username, String password, String confirmPassword) {
     if (username.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      Get.snackbar("Error", "All fields are required");
+      SnackbarHelper.show("Input Incomplete", "All fields are required");
       return;
     }
-
     if (password != confirmPassword) {
-      Get.snackbar("Error", "Passwords do not match");
+      SnackbarHelper.show("Password Error", "Passwords do not match");
       return;
     }
-
-    // ✅ Dummy success
-    Get.snackbar("Success", "Account created successfully");
+    SnackbarHelper.show("Success", "Account created successfully!");
     Get.offAllNamed('/login');
   }
 }
