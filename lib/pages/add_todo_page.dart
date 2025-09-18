@@ -7,6 +7,7 @@ class AddTodoPage extends StatelessWidget {
 
   final AddTodoController controller = Get.find<AddTodoController>();
   final RxString selectedPriority = "Low Priority".obs;
+  final RxString selectedCategory = "Personal".obs; // NEW CATEGORY DROPDOWN
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +30,15 @@ class AddTodoPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
- 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
                           "Add New Task",
                           style: TextStyle(
-                            color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold
-                          ),
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
                         ),
                         IconButton(
                           icon: const Icon(Icons.close, color: Colors.white),
@@ -45,83 +46,20 @@ class AddTodoPage extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 20),
 
-                  
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Task Name *", style: TextStyle(color: Colors.white70)),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: controller.titleCtrl,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: "Enter task name",
-                            hintStyle: const TextStyle(color: Colors.white38),
-                            filled: true,
-                            fillColor: Colors.white.withOpacity(0.05),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.white24),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.white24),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Color(0xFF5A67E8)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
+                    // Task Name
+                    _buildTextField(controller.titleCtrl, "Task Name *", "Enter task name"),
                     const SizedBox(height: 20),
 
-                    
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Description", style: TextStyle(color: Colors.white70)),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: controller.descCtrl,
-                          maxLines: 3,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: "Add a detailed description...",
-                            hintStyle: const TextStyle(color: Colors.white38),
-                            filled: true,
-                            fillColor: Colors.white.withOpacity(0.05),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.white24),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.white24),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Color(0xFF5A67E8)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
+                    // Description
+                    _buildTextField(controller.descCtrl, "Description", "Add a detailed description...", maxLines: 3),
                     const SizedBox(height: 20),
 
-                  
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Urgency Level *", style: TextStyle(color: Colors.white70)),
-                        const SizedBox(height: 10),
-                        Obx(() => Row(
+                    // Urgency
+                    const Text("Urgency Level *", style: TextStyle(color: Colors.white70)),
+                    const SizedBox(height: 10),
+                    Obx(() => Row(
                           children: ["Low Priority", "Medium Priority", "High Priority"].map((level) {
                             bool isSelected = selectedPriority.value == level;
                             Color color = Colors.grey;
@@ -157,58 +95,54 @@ class AddTodoPage extends StatelessWidget {
                             );
                           }).toList(),
                         )),
-                      ],
-                    ),
-
                     const SizedBox(height: 20),
 
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Due Date", style: TextStyle(color: Colors.white70)),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: controller.dueDateCtrl,
-                          readOnly: true,
+                    // Category Dropdown
+                    const Text("Category *", style: TextStyle(color: Colors.white70)),
+                    const SizedBox(height: 8),
+                    Obx(() => DropdownButtonFormField<String>(
+                          value: selectedCategory.value,
+                          dropdownColor: const Color(0xFF2C3E50),
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            hintText: "Select date",
-                            hintStyle: const TextStyle(color: Colors.white38),
                             filled: true,
                             fillColor: Colors.white.withOpacity(0.05),
-                            suffixIcon: const Icon(Icons.calendar_today_outlined, color: Colors.white54),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: const BorderSide(color: Colors.white24),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.white24),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Color(0xFF5A67E8)),
-                            ),
                           ),
-                          onTap: () async {
-                            final pickedDate = await showDatePicker(
-                              context: Get.context!,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2100),
-                            );
-                            if (pickedDate != null) {
-                              controller.dueDateCtrl.text =
-                                  "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
-                            }
+                          items: ["Work", "Study", "Personal"]
+                              .map((cat) => DropdownMenuItem(
+                                    value: cat,
+                                    child: Text(cat, style: const TextStyle(color: Colors.white)),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            if (value != null) selectedCategory.value = value;
                           },
-                        ),
-                      ],
-                    ),
+                        )),
+                    const SizedBox(height: 20),
 
+                    // Due Date
+                    _buildTextField(controller.dueDateCtrl, "Due Date", "Select date",
+                        readOnly: true,
+                        icon: Icons.calendar_today_outlined,
+                        onTap: () async {
+                          final pickedDate = await showDatePicker(
+                            context: Get.context!,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2100),
+                          );
+                          if (pickedDate != null) {
+                            controller.dueDateCtrl.text =
+                                "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+                          }
+                        }),
                     const SizedBox(height: 30),
 
-               
+                    // Buttons
                     Row(
                       children: [
                         Expanded(
@@ -228,17 +162,7 @@ class AddTodoPage extends StatelessWidget {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
-                              switch (selectedPriority.value) {
-                                case "Medium Priority":
-                                  controller.categoryCtrl.text = "Sekolah";
-                                  break;
-                                case "High Priority":
-                                  controller.categoryCtrl.text = "Pekerjaan";
-                                  break;
-                                default:
-                                  controller.categoryCtrl.text = "Pribadi";
-                                  break;
-                              }
+                              controller.categoryCtrl.text = selectedCategory.value;
                               controller.saveTodo();
                             },
                             style: ElevatedButton.styleFrom(
@@ -248,10 +172,8 @@ class AddTodoPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                            child: const Text(
-                              "Create Task",
-                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                            ),
+                            child: const Text("Create Task",
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                           ),
                         )
                       ],
@@ -263,6 +185,40 @@ class AddTodoPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController ctrl, String label, String hint,
+      {int maxLines = 1, bool readOnly = false, IconData? icon, VoidCallback? onTap}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(color: Colors.white70)),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: ctrl,
+          maxLines: maxLines,
+          readOnly: readOnly,
+          onTap: onTap,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: const TextStyle(color: Colors.white38),
+            filled: true,
+            fillColor: Colors.white.withOpacity(0.05),
+            suffixIcon: icon != null ? Icon(icon, color: Colors.white54) : null,
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.white24)),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.white24)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Color(0xFF5A67E8))),
+          ),
+        ),
+      ],
     );
   }
 }
