@@ -6,8 +6,6 @@ class AddTodoPage extends StatelessWidget {
   AddTodoPage({super.key});
 
   final AddTodoController controller = Get.find<AddTodoController>();
-  final RxString selectedPriority = "Low Priority".obs;
-  final RxString selectedCategory = "Personal".obs; 
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +28,7 @@ class AddTodoPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -48,20 +47,20 @@ class AddTodoPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // Task Name
+                    
                     _buildTextField(controller.titleCtrl, "Task Name *", "Enter task name"),
                     const SizedBox(height: 20),
 
-                    // Description
+                    
                     _buildTextField(controller.descCtrl, "Description", "Add a detailed description...", maxLines: 3),
                     const SizedBox(height: 20),
 
-                    // Urgency
+                    
                     const Text("Urgency Level *", style: TextStyle(color: Colors.white70)),
                     const SizedBox(height: 10),
                     Obx(() => Row(
                           children: ["Low Priority", "Medium Priority", "High Priority"].map((level) {
-                            bool isSelected = selectedPriority.value == level;
+                            bool isSelected = controller.selectedPriority.value == level;
                             Color color = Colors.grey;
                             if (level == "Low Priority") color = Colors.green;
                             if (level == "Medium Priority") color = Colors.orange;
@@ -69,7 +68,7 @@ class AddTodoPage extends StatelessWidget {
 
                             return Expanded(
                               child: GestureDetector(
-                                onTap: () => selectedPriority.value = level,
+                                onTap: () => controller.setPriority(level),
                                 child: Container(
                                   margin: const EdgeInsets.only(right: 8),
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -97,11 +96,11 @@ class AddTodoPage extends StatelessWidget {
                         )),
                     const SizedBox(height: 20),
 
-                    // Category Dropdown
+                   
                     const Text("Category *", style: TextStyle(color: Colors.white70)),
                     const SizedBox(height: 8),
                     Obx(() => DropdownButtonFormField<String>(
-                          value: selectedCategory.value,
+                          value: controller.selectedCategory.value,
                           dropdownColor: const Color(0xFF2C3E50),
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
@@ -119,12 +118,12 @@ class AddTodoPage extends StatelessWidget {
                                   ))
                               .toList(),
                           onChanged: (value) {
-                            if (value != null) selectedCategory.value = value;
+                            if (value != null) controller.setCategory(value);
                           },
                         )),
                     const SizedBox(height: 20),
 
-                    // Due Date
+                    
                     _buildTextField(controller.dueDateCtrl, "Due Date", "Select date",
                         readOnly: true,
                         icon: Icons.calendar_today_outlined,
@@ -142,7 +141,7 @@ class AddTodoPage extends StatelessWidget {
                         }),
                     const SizedBox(height: 30),
 
-                    // Buttons
+                    
                     Row(
                       children: [
                         Expanded(
@@ -161,10 +160,7 @@ class AddTodoPage extends StatelessWidget {
                         const SizedBox(width: 16),
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {
-                              controller.categoryCtrl.text = selectedCategory.value;
-                              controller.saveTodo();
-                            },
+                            onPressed: controller.saveTodo,
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               backgroundColor: const Color(0xFF5A67E8),

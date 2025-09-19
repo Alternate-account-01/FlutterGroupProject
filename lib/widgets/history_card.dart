@@ -78,7 +78,7 @@ class HistoryCard extends StatelessWidget {
                   ),
                 ),
 
-                // Due date (optional)
+             
                 if (todo.dueDate.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),

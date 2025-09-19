@@ -28,9 +28,8 @@ class TodoEditPage extends StatelessWidget {
 
 class TodoEditCard extends StatelessWidget {
   final TodoEditController controller;
-  final RxString selectedCategory = "Personal".obs; // CATEGORY FIELD
 
-  TodoEditCard({super.key, required this.controller});
+  const TodoEditCard({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,6 @@ class TodoEditCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -56,7 +54,6 @@ class TodoEditCard extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          
           CustomTextField(
             controller: controller.titleController,
             label: "Task Name *",
@@ -64,7 +61,6 @@ class TodoEditCard extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-        
           CustomTextField(
             controller: controller.descController,
             label: "Description",
@@ -73,7 +69,6 @@ class TodoEditCard extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          
           const Text("Urgency Level *", style: TextStyle(color: Colors.white70)),
           const SizedBox(height: 10),
           Obx(() => Row(
@@ -85,11 +80,10 @@ class TodoEditCard extends StatelessWidget {
               )),
           const SizedBox(height: 20),
 
-          // Category Dropdown
           const Text("Category *", style: TextStyle(color: Colors.white70)),
           const SizedBox(height: 8),
           Obx(() => DropdownButtonFormField<String>(
-                value: selectedCategory.value,
+                value: controller.selectedCategory.value,
                 dropdownColor: const Color(0xFF2C3E50),
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
@@ -107,11 +101,10 @@ class TodoEditCard extends StatelessWidget {
                         ))
                     .toList(),
                 onChanged: (value) {
-                  if (value != null) selectedCategory.value = value;
+                  if (value != null) controller.setCategory(value);
                 },
               )),
           const SizedBox(height: 20),
-
 
           CustomTextField(
             controller: controller.dueDateController,
@@ -123,7 +116,6 @@ class TodoEditCard extends StatelessWidget {
           ),
           const SizedBox(height: 30),
 
-   
           Row(
             children: [
               Expanded(
@@ -140,7 +132,6 @@ class TodoEditCard extends StatelessWidget {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    controller.categoryController.text = selectedCategory.value;
                     controller.saveTodo();
                   },
                   style: ElevatedButton.styleFrom(
@@ -180,7 +171,9 @@ class TodoEditCard extends StatelessWidget {
             children: [
               Icon(Icons.circle, color: color, size: 14),
               const SizedBox(width: 8),
-              Flexible(child: Text(level, style: const TextStyle(color: Colors.white), overflow: TextOverflow.ellipsis)),
+              Flexible(
+                  child: Text(level,
+                      style: const TextStyle(color: Colors.white), overflow: TextOverflow.ellipsis)),
             ],
           ),
         ),

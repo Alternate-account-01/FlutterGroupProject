@@ -6,6 +6,27 @@ import '../widgets/snackbar_helper.dart';
 class HomeController extends GetxController {
   var todos = <TodoModel>[].obs;
 
+ 
+  List<TodoModel> get pendingTodos =>
+      todos.where((todo) => !todo.isDone).toList();
+
+  List<TodoModel> get completedTodos =>
+      todos.where((todo) => todo.isDone).toList();
+
+  int get totalTasks => todos.length;
+
+  int get urgentTodos =>
+      todos.where((t) => t.urgency == 'High Priority' && !t.isDone).length;
+
+  // Stats for UI header
+  RxList<Map<String, dynamic>> get stats => <Map<String, dynamic>>[
+        {'count': totalTasks, 'label': 'Total Tasks', 'color': Colors.blue},
+        {'count': completedTodos.length, 'label': 'Completed', 'color': Colors.green},
+        {'count': pendingTodos.length, 'label': 'Pending', 'color': Colors.orange},
+        {'count': urgentTodos, 'label': 'Urgent', 'color': Colors.red},
+      ].obs;
+
+ //crud things
   void addTodo(TodoModel todo) {
     todos.add(todo);
   }
@@ -24,20 +45,9 @@ class HomeController extends GetxController {
     todos.removeAt(index);
   }
 
-  List<TodoModel> get pendingTodos =>
-      todos.where((todo) => !todo.isDone).toList();
-
-  List<TodoModel> get completedTodos =>
-      todos.where((todo) => todo.isDone).toList();
-
-  int get totalTasks => todos.length;
-
-  int get urgentTodos =>
-      todos.where((t) => t.category == 'Pekerjaan' && !t.isDone).length;
-
+ 
   void handleDismiss(int index, DismissDirection direction) {
     if (direction == DismissDirection.endToStart) {
- 
       final taskTitle = todos[index].title;
       markDone(index);
 
@@ -47,7 +57,6 @@ class HomeController extends GetxController {
         bgColor: Colors.green,
       );
     } else if (direction == DismissDirection.startToEnd) {
-      
       final removedTodo = todos[index];
       todos.removeAt(index);
 
@@ -112,8 +121,7 @@ class HomeController extends GetxController {
                     ),
                     child: const Text("Delete",
                         style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)),
+                            color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],

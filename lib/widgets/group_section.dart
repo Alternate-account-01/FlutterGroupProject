@@ -46,7 +46,7 @@ class GroupSection extends StatelessWidget {
                 key: Key(todo.title + realIndex.toString()),
                 onDismissed: (direction) {
                   if (direction == DismissDirection.startToEnd) {
-                    // Restore task
+               
                     if (realIndex != -1) homeController.undoDone(realIndex);
 
                     SnackbarHelper.show(
@@ -61,7 +61,7 @@ class GroupSection extends StatelessWidget {
                       },
                     );
                   } else if (direction == DismissDirection.endToStart) {
-                    // Delete permanently
+             
                     if (realIndex != -1) {
                       final removedTodo = todo;
                       homeController.deleteTodo(realIndex);
