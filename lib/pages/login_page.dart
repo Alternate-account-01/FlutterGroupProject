@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 24),
 
-                // Go to register
+           
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(

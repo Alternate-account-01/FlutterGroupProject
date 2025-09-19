@@ -11,12 +11,12 @@ class TodoEditController extends GetxController {
 
   final titleController = TextEditingController();
   final descController = TextEditingController();
-  final urgencyController = TextEditingController();   // dropdown
-  final categoryController = TextEditingController();  // priority
+  final urgencyController = TextEditingController();   
+  final categoryController = TextEditingController();  
   final dueDateController = TextEditingController();
 
-  final RxString selectedPriority = "Low".obs;     // category
-  final RxString selectedUrgency = "Work".obs;     // urgency
+  final RxString selectedPriority = "Low Priority".obs;
+  final RxString selectedCategory = "Personal".obs;
 
   @override
   void onInit() {
@@ -31,8 +31,8 @@ class TodoEditController extends GetxController {
     categoryController.text = todo.category;
     dueDateController.text = todo.dueDate;
 
-    selectedUrgency.value = todo.urgency;
-    selectedPriority.value = todo.category;
+    selectedPriority.value = todo.urgency;
+    selectedCategory.value = todo.category;
   }
 
   void pickDate(BuildContext context) async {
@@ -50,12 +50,12 @@ class TodoEditController extends GetxController {
 
   void setPriority(String level) {
     selectedPriority.value = level;
-    categoryController.text = level; 
+    urgencyController.text = level;
   }
 
-  void setUrgency(String type) {
-    selectedUrgency.value = type;
-    urgencyController.text = type;
+  void setCategory(String type) {
+    selectedCategory.value = type;
+    categoryController.text = type;
   }
 
   void saveTodo() {

@@ -26,73 +26,9 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 24),
             _buildStatsHeader(),
             const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Today's Tasks",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Obx(() => Text(
-                        "${controller.pendingTodos.length} tasks",
-                        style: const TextStyle(color: Colors.grey, fontSize: 16),
-                      )),
-                ],
-              ),
-            ),
+            _buildTodayTasksHeader(),
             const SizedBox(height: 16),
-            Expanded(
-              child: Obx(() {
-                if (controller.pendingTodos.isEmpty) {
-                  return const Center(
-                      child: Text("No pending tasks!",
-                          style: TextStyle(fontSize: 18, color: Colors.grey)));
-                }
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: controller.pendingTodos.length,
-                  itemBuilder: (context, index) {
-                    final todoFromPendingList = controller.pendingTodos[index];
-                    final originalIndex =
-                        controller.todos.indexOf(todoFromPendingList);
-
-                    return Dismissible(
-                      key: Key(todoFromPendingList.title + originalIndex.toString()),
-                      onDismissed: (direction) =>
-                          controller.handleDismiss(originalIndex, direction),
-                      background: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: Colors.red.shade400,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        alignment: Alignment.centerLeft,
-                        child: const Icon(Icons.delete_outline, color: Colors.white),
-                      ),
-                      secondaryBackground: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                          color: Colors.green.shade400,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        alignment: Alignment.centerRight,
-                        child: const Icon(Icons.check, color: Colors.white),
-                      ),
-                      child: TaskCard(
-                        todo: todoFromPendingList,
-                        onEdit: () {
-                          final fullTodo = controller.todos[originalIndex];
-                          Get.toNamed(AppRoutes.editTodo, arguments: {
-                            'todo': fullTodo,
-                            'index': originalIndex,
-                          });
-                        },
-                      ),
-                    );
-                  },
-                );
-              }),
-            ),
+            _buildPendingTasksList(),
           ],
         ),
       ),
@@ -104,12 +40,10 @@ class HomePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Obx(() => Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildStatItem(controller.totalTasks.toString(), "Total Tasks", Colors.blue),
-              _buildStatItem(controller.completedTodos.length.toString(), "Completed", Colors.green),
-              _buildStatItem(controller.pendingTodos.length.toString(), "Pending", Colors.orange),
-              _buildStatItem(controller.urgentTodos.toString(), "Urgent", Colors.red),
-            ],
+            children: controller.stats
+                .map((stat) => _buildStatItem(
+                    stat['count'].toString(), stat['label'], stat['color']))
+                .toList(),
           )),
     );
   }
@@ -122,6 +56,77 @@ class HomePage extends StatelessWidget {
         const SizedBox(height: 4),
         Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
       ],
+    );
+  }
+
+  Widget _buildTodayTasksHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text("Today's Tasks",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Obx(() => Text(
+                "${controller.pendingTodos.length} tasks",
+                style: const TextStyle(color: Colors.grey, fontSize: 16),
+              )),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPendingTasksList() {
+    return Expanded(
+      child: Obx(() {
+        if (controller.pendingTodos.isEmpty) {
+          return const Center(
+              child: Text("No pending tasks!",
+                  style: TextStyle(fontSize: 18, color: Colors.grey)));
+        }
+        return ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          itemCount: controller.pendingTodos.length,
+          itemBuilder: (context, index) {
+            final todoFromPendingList = controller.pendingTodos[index];
+            final originalIndex = controller.todos.indexOf(todoFromPendingList);
+
+            return Dismissible(
+              key: Key(todoFromPendingList.title + originalIndex.toString()),
+              onDismissed: (direction) =>
+                  controller.handleDismiss(originalIndex, direction),
+              background: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade400,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                alignment: Alignment.centerLeft,
+                child: const Icon(Icons.delete_outline, color: Colors.white),
+              ),
+              secondaryBackground: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade400,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                alignment: Alignment.centerRight,
+                child: const Icon(Icons.check, color: Colors.white),
+              ),
+              child: TaskCard(
+                todo: todoFromPendingList,
+                onEdit: () {
+                  final fullTodo = controller.todos[originalIndex];
+                  Get.toNamed(AppRoutes.editTodo, arguments: {
+                    'todo': fullTodo,
+                    'index': originalIndex,
+                  });
+                },
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 }

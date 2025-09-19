@@ -5,15 +5,20 @@ import 'home_controller.dart';
 import '../widgets/snackbar_helper.dart';
 
 class AddTodoController extends GetxController {
+
   final titleCtrl = TextEditingController();
   final descCtrl = TextEditingController();
-  final urgencyCtrl = TextEditingController();   
-  final categoryCtrl = TextEditingController();  
   final dueDateCtrl = TextEditingController();
+
+
+  final RxString selectedPriority = "Low Priority".obs;
+  final RxString selectedCategory = "Personal".obs;
+
+
+  final RxBool isSaving = false.obs;
 
   final HomeController homeController = Get.find<HomeController>();
 
-  final RxBool isSaving = false.obs;
 
   void saveTodo() async {
     if (isSaving.value) return;
@@ -25,7 +30,6 @@ class AddTodoController extends GetxController {
       return;
     }
 
-   
     final exists = homeController.todos.any(
       (t) => t.title.trim().toLowerCase() == title.toLowerCase(),
     );
@@ -43,8 +47,8 @@ class AddTodoController extends GetxController {
       final newTodo = TodoModel(
         title: title,
         description: descCtrl.text.trim(),
-        urgency: urgencyCtrl.text.trim(),   
-        category: categoryCtrl.text.trim(), 
+        urgency: selectedPriority.value,   // ⚡ use selectedPriority
+        category: selectedCategory.value,  // ⚡ use selectedCategory
         dueDate: dueDateCtrl.text.trim(),
       );
 
@@ -60,12 +64,18 @@ class AddTodoController extends GetxController {
     }
   }
 
+  void setPriority(String priority) {
+    selectedPriority.value = priority;
+  }
+
+  void setCategory(String category) {
+    selectedCategory.value = category;
+  }
+
   @override
   void onClose() {
     titleCtrl.dispose();
     descCtrl.dispose();
-    urgencyCtrl.dispose();
-    categoryCtrl.dispose();
     dueDateCtrl.dispose();
     super.onClose();
   }
