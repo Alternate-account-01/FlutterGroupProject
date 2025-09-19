@@ -163,7 +163,7 @@ class DrawerPage extends StatelessWidget {
                       );
                     }),
 
-                    // --- History menu item ---
+                 
                     Obx(() {
                       bool isSelected = controller.selectedIndex.value == 1;
                       return Container(
@@ -192,7 +192,7 @@ class DrawerPage extends StatelessWidget {
                       );
                     }),
 
-                    // --- Profile menu item ---
+        
                     Obx(() {
                       bool isSelected = controller.selectedIndex.value == 2;
                       return Container(

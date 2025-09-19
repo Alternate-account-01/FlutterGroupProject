@@ -13,7 +13,7 @@ class HistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final priority = getPriority(todo.urgency); // urgency => Urgent/Medium/Low
+    final priority = getPriority(todo.urgency); 
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -34,12 +34,12 @@ class HistoryCard extends StatelessWidget {
           Icon(Icons.check_circle, color: Colors.green.shade600, size: 26),
           const SizedBox(width: 12),
 
-          // Content
+          
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title
+              
                 Text(
                   todo.title,
                   style: const TextStyle(
@@ -49,7 +49,7 @@ class HistoryCard extends StatelessWidget {
                   ),
                 ),
 
-                // Description (optional)
+              
                 if (todo.description.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
@@ -59,7 +59,7 @@ class HistoryCard extends StatelessWidget {
                     ),
                   ),
 
-                // Category (Work/Study/Personal)
+              
                 Padding(
                   padding: const EdgeInsets.only(top: 4.0),
                   child: Row(
@@ -68,7 +68,7 @@ class HistoryCard extends StatelessWidget {
                           size: 14, color: Colors.blueGrey),
                       const SizedBox(width: 4),
                       Text(
-                        todo.category, // Work / Study / Personal
+                        todo.category,
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.blueGrey,
@@ -103,7 +103,7 @@ class HistoryCard extends StatelessWidget {
 
           const SizedBox(width: 12),
 
-          // Priority badge (Urgent/Medium/Low)
+       
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(

@@ -56,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 32),
 
-                // Username
+               
                 InputField(
                   controller: txtUsername,
                   label: "Username",
@@ -64,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Password
+                
                 Obx(
                   () => InputField(
                     controller: txtPassword,
@@ -79,7 +79,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Confirm Password
+               
                 Obx(
                   () => InputField(
                     controller: txtConfirmPassword,
@@ -95,7 +95,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 32),
 
-                // Register button
+                
                 PrimaryButton(
                   text: "Sign Up",
                   onPressed: () {
@@ -123,7 +123,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 24),
 
-                // Back to login
+                
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(

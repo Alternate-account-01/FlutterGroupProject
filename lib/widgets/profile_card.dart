@@ -18,17 +18,17 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Tema warna utama
-    const themeColor = Color(0xFF4285F4); // Google Blue, bisa diganti
+  
+    const themeColor = Color(0xFF4285F4); 
 
     return Stack(
-      // Mengizinkan CircleAvatar keluar dari batas Card
+    
       clipBehavior: Clip.none,
       alignment: Alignment.topCenter,
       children: [
-        // Konten utama kartu
+        
         Container(
-          // Margin atas untuk memberi ruang bagi CircleAvatar
+        
           margin: const EdgeInsets.only(top: 50),
           padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
           decoration: BoxDecoration(
