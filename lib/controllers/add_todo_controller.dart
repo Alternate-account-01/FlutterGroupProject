@@ -7,8 +7,8 @@ import '../widgets/snackbar_helper.dart';
 class AddTodoController extends GetxController {
   final titleCtrl = TextEditingController();
   final descCtrl = TextEditingController();
-  final urgencyCtrl = TextEditingController();   // dropdown
-  final categoryCtrl = TextEditingController();  // priority
+  final urgencyCtrl = TextEditingController();   
+  final categoryCtrl = TextEditingController();  
   final dueDateCtrl = TextEditingController();
 
   final HomeController homeController = Get.find<HomeController>();
@@ -25,7 +25,7 @@ class AddTodoController extends GetxController {
       return;
     }
 
-    // prevent duplicates
+   
     final exists = homeController.todos.any(
       (t) => t.title.trim().toLowerCase() == title.toLowerCase(),
     );
@@ -43,8 +43,8 @@ class AddTodoController extends GetxController {
       final newTodo = TodoModel(
         title: title,
         description: descCtrl.text.trim(),
-        urgency: urgencyCtrl.text.trim(),   // from dropdown
-        category: categoryCtrl.text.trim(), // from priority buttons
+        urgency: urgencyCtrl.text.trim(),   
+        category: categoryCtrl.text.trim(), 
         dueDate: dueDateCtrl.text.trim(),
       );
 

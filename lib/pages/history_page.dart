@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
+import '../controllers/history_controller.dart';
 import '../widgets/stat_item.dart';
 import '../widgets/group_section.dart';
 
@@ -10,11 +11,12 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeController homeController = Get.find<HomeController>();
+    final HistoryController historyController = Get.put(HistoryController());
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: Obx(() {
-        final completed = homeController.completedTodos;
+        final completed = historyController.completedTodos;
 
         return ListView(
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -27,7 +29,7 @@ class HistoryPage extends StatelessWidget {
                 title: 'Earlier',
                 list: completed,
                 homeController: homeController,
-                getPriority: _getUrgency,
+                getPriority: historyController.getUrgency,
               ),
 
             if (completed.isEmpty)
@@ -103,7 +105,7 @@ class HistoryPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            "This will permanently delete all ${homeController.completedTodos.length} completed tasks.",
+                            "This will permanently delete all ${completedCount} completed tasks.",
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               color: Colors.black54,
@@ -178,19 +180,5 @@ class HistoryPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  /// Map urgency from category
-  Map<String, dynamic> _getUrgency(String? category) {
-    switch (category) {
-      case 'Pekerjaan':
-        return {'level': 'High Priority', 'color': Colors.red.shade400};
-      case 'Sekolah':
-      case 'Keluarga':
-        return {'level': 'Medium Priority', 'color': Colors.orange.shade400};
-      case 'Pribadi':
-      default:
-        return {'level': 'Low Priority', 'color': Colors.green.shade400};
-    }
   }
 }

@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 32),
 
-                // Username
+                
                 InputField(
                   controller: txtUsername,
                   label: "Username",
@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // Password
+               
                 Obx(
                   () => InputField(
                     controller: txtPassword,
@@ -83,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 32),
 
-                // Login button
+
                 PrimaryButton(
                   text: "Sign In",
                   onPressed: () {

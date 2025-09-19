@@ -43,7 +43,7 @@ class TaskCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // urgency color bar
+        
           Container(
             width: 4,
             height: 50,
@@ -54,12 +54,12 @@ class TaskCard extends StatelessWidget {
           ),
           const SizedBox(width: 12),
 
-          // Content
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title
+              
                 Text(
                   todo.title,
                   style: const TextStyle(
@@ -69,7 +69,7 @@ class TaskCard extends StatelessWidget {
                   ),
                 ),
 
-                // Description
+                
                 if (todo.description.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Text(
@@ -80,7 +80,7 @@ class TaskCard extends StatelessWidget {
 
                 const SizedBox(height: 12),
 
-                // urgency + category + due date
+                
                 Row(
                   children: [
                     Icon(Icons.circle,
@@ -95,7 +95,7 @@ class TaskCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      todo.category, // Work / Study / Personal
+                      todo.category,
                       style: const TextStyle(
                         color: Colors.black87,
                         fontSize: 12,
@@ -121,7 +121,7 @@ class TaskCard extends StatelessWidget {
             ),
           ),
 
-          // Edit button
+        
           IconButton(
             icon: Icon(Icons.edit_outlined, color: Colors.grey.shade600),
             onPressed: onEdit,

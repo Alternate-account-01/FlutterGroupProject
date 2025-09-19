@@ -50,12 +50,12 @@ class TodoEditController extends GetxController {
 
   void setPriority(String level) {
     selectedPriority.value = level;
-    categoryController.text = level; // "Low", "Medium", "High"
+    categoryController.text = level; 
   }
 
   void setUrgency(String type) {
     selectedUrgency.value = type;
-    urgencyController.text = type; // "Work", "Study", "Personal"
+    urgencyController.text = type;
   }
 
   void saveTodo() {

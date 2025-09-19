@@ -37,7 +37,7 @@ class HomeController extends GetxController {
 
   void handleDismiss(int index, DismissDirection direction) {
     if (direction == DismissDirection.endToStart) {
-      // Mark as done
+ 
       final taskTitle = todos[index].title;
       markDone(index);
 
@@ -47,7 +47,7 @@ class HomeController extends GetxController {
         bgColor: Colors.green,
       );
     } else if (direction == DismissDirection.startToEnd) {
-      // Delete with Undo option
+      
       final removedTodo = todos[index];
       todos.removeAt(index);
 

@@ -7,7 +7,7 @@ class AddTodoPage extends StatelessWidget {
 
   final AddTodoController controller = Get.find<AddTodoController>();
   final RxString selectedPriority = "Low Priority".obs;
-  final RxString selectedCategory = "Personal".obs; // NEW CATEGORY DROPDOWN
+  final RxString selectedCategory = "Personal".obs; 
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/todo_edit_controller.dart';
+import '../widgets/edit_text_field.dart';
 
 class TodoEditPage extends StatelessWidget {
   const TodoEditPage({super.key});
@@ -44,7 +45,7 @@ class TodoEditCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
+          
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -55,16 +56,24 @@ class TodoEditCard extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          // Task Name
-          _buildTextField(controller.titleController, "Task Name *", "Enter task name"),
+          
+          CustomTextField(
+            controller: controller.titleController,
+            label: "Task Name *",
+            hint: "Enter task name",
+          ),
           const SizedBox(height: 20),
 
-          // Description
-          _buildTextField(controller.descController, "Description", "Add a detailed description...",
-              maxLines: 3),
+        
+          CustomTextField(
+            controller: controller.descController,
+            label: "Description",
+            hint: "Add a detailed description...",
+            maxLines: 3,
+          ),
           const SizedBox(height: 20),
 
-          // Urgency
+          
           const Text("Urgency Level *", style: TextStyle(color: Colors.white70)),
           const SizedBox(height: 10),
           Obx(() => Row(
@@ -103,12 +112,18 @@ class TodoEditCard extends StatelessWidget {
               )),
           const SizedBox(height: 20),
 
-          // Due Date
-          _buildTextField(controller.dueDateController, "Due Date", "Select date",
-              readOnly: true, icon: Icons.calendar_today_outlined, onTap: () => controller.pickDate(context)),
+
+          CustomTextField(
+            controller: controller.dueDateController,
+            label: "Due Date",
+            hint: "Select date",
+            readOnly: true,
+            icon: Icons.calendar_today_outlined,
+            onTap: () => controller.pickDate(context),
+          ),
           const SizedBox(height: 30),
 
-          // Buttons
+   
           Row(
             children: [
               Expanded(
@@ -140,37 +155,6 @@ class TodoEditCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildTextField(TextEditingController ctrl, String label, String hint,
-      {int maxLines = 1, bool readOnly = false, IconData? icon, VoidCallback? onTap}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(color: Colors.white70)),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: ctrl,
-          maxLines: maxLines,
-          readOnly: readOnly,
-          onTap: onTap,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: const TextStyle(color: Colors.white38),
-            filled: true,
-            fillColor: Colors.white.withOpacity(0.05),
-            suffixIcon: icon != null ? Icon(icon, color: Colors.white54) : null,
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.white24)),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.white24)),
-            focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Color(0xFF5A67E8))),
-          ),
-        ),
-      ],
     );
   }
 
